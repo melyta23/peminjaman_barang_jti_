@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="NdIPkqqY8VddXleuuwsaYs1ocDXy6rV8CCxbjzAw">
+    <title>Dashboard Kontrol Laboran - SIPEMBAR JTI Polije</title>
+
+    <!-- Bootstrap 5.3.3 & Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    
+    <!-- Google Fonts: Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Chart.js untuk Grafik Interaktif Modern -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        :root {
+            --sidebar-w: 260px;
+            --navy-dark: #091322;
+            --navy-card: #0f1d32;
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --slate-bg: #f8fafc;
+            --text-dark: #0f172a;
+            --text-muted: #64748b;
+            --border-ui: #e2e8f0;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--slate-bg);
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            margin: 0;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* SIDEBAR MODERN */
+        .admin-sidebar {
+            width: var(--sidebar-w);
+            min-height: 100vh;
+            background-color: var(--navy-dark);
+            color: #94a3b8;
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            z-index: 1040;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.25s ease;
+        }
+
+        .sidebar-brand {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .sidebar-brand-logo {
+            width: 38px;
+            height: 38px;
+            background: #ffffff;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+        }
+
+        .sidebar-menu {
+            padding: 1rem 0.75rem;
+            flex-grow: 1;
+            overflow-y: auto;
+        }
+
+        .menu-header {
+            font-size: 0.68rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #64748b;
+            padding: 0.75rem 0.75rem 0.25rem 0.75rem;
+            font-weight: 700;
+        }
+
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.65rem 0.85rem;
+            color: #94a3b8;
+            border-radius: 8px;
+            font-weight: 500;
+            font-size: 0.88rem;
+            text-decoration: none;
+            margin-bottom: 2px;
+            transition: all 0.15s ease;
+        }
+
+        .sidebar-link i.link-icon {
+            font-size: 1.1rem;
+            margin-right: 10px;
+            color: #64748b;
+            transition: color 0.15s ease;
+        }
+
+        .sidebar-link:hover {
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .sidebar-link:hover i.link-icon {
+            color: #38bdf8;
+        }
+
+        .sidebar-link.active {
+            color: #ffffff;
+            background: #2563eb;
+            font-weight: 600;
+            box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
+        }
+
+        .sidebar-link.active i.link-icon {
+            color: #ffffff;
+        }
+
+        .sidebar-user {
+            padding: 1rem 1.25rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        /* MAIN WRAPPER */
+        .admin-main {
+            margin-left: var(--sidebar-w);
+            flex-grow: 1;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            width: calc(100% - var(--sidebar-w));
+            background: radial-gradient(circle at 50% 0%, rgba(37, 99, 235, 0.04) 0%, transparent 60%), #f8fafc;
+        }
+
+        /* TOPBAR ADMIN */
+        .admin-topbar {
+            background: #ffffff;
+            border-bottom: 1px solid var(--border-ui);
+            padding: 0.85rem 1.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 1020;
+        }
+
+        /* CARDS & UI ELEMENTS */
+        .card-ui {
+            background: #ffffff;
+            border: 1px solid rgba(226, 232, 240, 0.9);
+            border-radius: 16px;
+            box-shadow: 0 1px 3px rgba(15, 23, 42, 0.03), 0 6px 16px rgba(15, 23, 42, 0.02);
+            transition: all 0.25s ease;
+        }
+
+        .card-ui:hover {
+            box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.06);
+            border-color: #cbd5e1;
+        }
+
+        .metric-icon-box {
+            width: 50px;
+            height: 50px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.35rem;
+        }
+
+        /* Pulsing Dot */
+        .pulse-online {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #10b981;
+            display: inline-block;
+            box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+            animation: pulse-ring 2s infinite;
+        }
+
+        @keyframes pulse-ring {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        @media (max-width: 991px) {
+            .admin-sidebar {
+                transform: translateX(-100%);
+            }
+            .admin-sidebar.show {
+                transform: translateX(0);
+            }
+            .admin-main {
+                margin-left: 0;
+                width: 100%;
+            }
+        }
+    </style>
+    </head>
+<body>
+
+    <!-- 1. SIDEBAR ADMINISTRATOR -->
+    <aside class="admin-sidebar" id="adminSidebar">
+        <!-- Brand Header -->
+        <a href="http://localhost/admin/dashboard" class="sidebar-brand">
+            <div class="sidebar-brand-logo">
+                <svg viewBox="0 0 100 100" width="28" height="28">
+                    <polygon points="50,4 93,22 80,82 50,96 20,82 7,22" fill="#0080c8"/>
+                    <circle cx="50" cy="50" r="22" fill="#ffffff"/>
+                    <path d="M50,30 Q58,45 50,65 Q42,45 50,30" fill="#facc15"/>
+                    <path d="M43,38 Q50,45 44,55" stroke="#15803d" stroke-width="2" fill="none"/>
+                    <path d="M57,38 Q50,45 56,55" stroke="#15803d" stroke-width="2" fill="none"/>
+                </svg>
+            </div>
+            <div class="d-flex flex-column">
+                <span class="text-white fw-bold fs-6" style="letter-spacing: -0.3px;">SIPEMBAR JTI</span>
+                <span class="text-white-50 small" style="font-size: 0.7rem;">COMMAND CENTER</span>
+            </div>
+        </a>
+
+        <!-- Sidebar Navigation Menu -->
+        <div class="sidebar-menu">
+            <div class="menu-header">Menu Utama</div>
+            <a href="http://localhost/admin/dashboard" class="sidebar-link ">
+                <div><i class="bi bi-grid-1x2-fill link-icon"></i> Dashboard Kontrol</div>
+            </a>
+            <a href="http://localhost/admin/peminjaman" class="sidebar-link ">
+                <div><i class="bi bi-inbox-fill link-icon"></i> Data Peminjaman</div>
+                                            </a>
+
+            <div class="menu-header mt-3">Manajemen Inventaris 3 Lab</div>
+            <a href="http://localhost/admin/items" class="sidebar-link ">
+                <div><i class="bi bi-collection-fill link-icon"></i> Semua Sarpras Lab</div>
+                <span class="badge bg-secondary bg-opacity-25 text-white-50 small">32 Unit</span>
+            </a>
+            <a href="http://localhost/admin/items?category_id=1" class="sidebar-link ">
+                <div><i class="bi bi-music-note-beamed link-icon" style="color: #818cf8;"></i> Alat Musik & Audio</div>
+            </a>
+            <a href="http://localhost/admin/items?category_id=2" class="sidebar-link ">
+                <div><i class="bi bi-camera-video-fill link-icon" style="color: #fbbf24;"></i> Alat Syuting & Video</div>
+            </a>
+            <a href="http://localhost/admin/items?category_id=3" class="sidebar-link ">
+                <div><i class="bi bi-pc-display link-icon" style="color: #38bdf8;"></i> PC & Lab Komputer</div>
+            </a>
+            <a href="http://localhost/admin/items/create" class="sidebar-link ">
+                <div><i class="bi bi-plus-circle-fill link-icon text-success"></i> Tambah Sarana Baru</div>
+            </a>
+
+            <div class="menu-header mt-3">Tautan Eksternal</div>
+            <a href="http://localhost" target="_blank" class="sidebar-link">
+                <div><i class="bi bi-globe link-icon"></i> Halaman Publik Mahasiswa</div>
+                <i class="bi bi-box-arrow-up-right small text-muted"></i>
+            </a>
+            <a href="http://localhost/tracking" target="_blank" class="sidebar-link">
+                <div><i class="bi bi-search link-icon"></i> Pelacakan Status Surat</div>
+                <i class="bi bi-box-arrow-up-right small text-muted"></i>
+            </a>
+        </div>
+
+        <!-- Sidebar User Footer -->
+        <div class="sidebar-user">
+            <div class="d-flex align-items-center justify-content-between">
+                <div class="d-flex align-items-center gap-2.5">
+                    <div class="rounded-circle bg-primary bg-opacity-20 text-primary border border-primary border-opacity-25 d-flex align-items-center justify-content-center fw-bold" style="width: 36px; height: 36px;">
+                        <i class="bi bi-person-fill"></i>
+                    </div>
+                    <div>
+                        <div class="text-white small fw-bold text-truncate" style="max-width: 130px;">Admin Laboran JTI</div>
+                        <div class="text-white-50" style="font-size: 0.72rem;"><span class="pulse-online me-1"></span> Laboran JTI</div>
+                    </div>
+                </div>
+
+                <form action="http://localhost/logout" method="POST">
+                    <input type="hidden" name="_token" value="NdIPkqqY8VddXleuuwsaYs1ocDXy6rV8CCxbjzAw" autocomplete="off">                    <button type="submit" class="btn btn-outline-danger btn-sm p-1.5 rounded-3" title="Keluar">
+                        <i class="bi bi-power"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </aside>
+
+    <!-- 2. MAIN CONTENT AREA -->
+    <div class="admin-main">
+        <!-- Topbar Header -->
+        <header class="admin-topbar">
+            <div class="d-flex align-items-center gap-3">
+                <button class="btn btn-light d-lg-none p-1.5 rounded border" onclick="document.getElementById('adminSidebar').classList.toggle('show')">
+                    <i class="bi bi-list fs-5"></i>
+                </button>
+                <div>
+                    <h5 class="fw-bold text-dark mb-0" style="letter-spacing: -0.3px;">Dashboard &amp; Pusat Kontrol Laboran</h5>
+                    <span class="text-muted small">Jurusan Teknologi Informasi • Politeknik Negeri Jember</span>
+                </div>
+            </div>
+
+            <div class="d-flex align-items-center gap-3">
+                <!-- Status Badge -->
+                <div class="d-none d-sm-flex align-items-center gap-2 bg-light px-3 py-1.5 rounded-pill border small">
+                    <span class="pulse-online"></span>
+                    <span class="text-muted">Status Server:</span>
+                    <strong class="text-success">Live & Sinkron</strong>
+                </div>
+
+                <!-- Notifikasi Cepat -->
+                <a href="http://localhost/admin/peminjaman?status=menunggu" class="btn btn-light position-relative p-2 rounded-circle border" title="Pengajuan Menunggu">
+                    <i class="bi bi-bell-fill text-secondary"></i>
+                                    </a>
+            </div>
+        </header>
+
+        <!-- Flash Message Alerts -->
+        <div class="container-fluid px-4 mt-3">
+            
+                    </div>
+
+        <!-- Page Dynamic Content -->
+        <main class="container-fluid px-4 py-3 flex-grow-1">
+            
+    <!-- 1. HERO METRIC CARDS (4 KARTU MODERN & INTERAKTIF) -->
+    <div class="row g-3 mb-4">
+        <!-- Metrik 1: Total Unit -->
+        <div class="col-sm-6 col-xl-3">
+            <div class="card card-ui p-4 h-100 position-relative overflow-hidden">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                    <div>
+                        <span class="text-muted small fw-semibold text-uppercase tracking-wider">Total Aset Sarpras</span>
+                        <h2 class="fw-bold text-dark mt-1 mb-0">29 <span class="fs-6 fw-normal text-muted">Unit</span></h2>
+                    </div>
+                    <div class="metric-icon-box bg-primary bg-opacity-10 text-primary">
+                        <i class="bi bi-boxes"></i>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center gap-1 small text-muted mt-2">
+                    <span class="badge bg-light text-dark border py-0.5 px-1.5 fw-normal">3 Laboratorium</span>
+                    <span>Terdaftar di sistem</span>
+                </div>
+                <div class="progress mt-3" style="height: 5px;">
+                    <div class="progress-bar bg-primary" style="width: 100%"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Metrik 2: Siap Pakai -->
+        <div class="col-sm-6 col-xl-3">
+            <div class="card card-ui p-4 h-100 position-relative overflow-hidden">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                    <div>
+                        <span class="text-muted small fw-semibold text-uppercase tracking-wider">Stok Siap Digunakan</span>
+                        <h2 class="fw-bold text-success mt-1 mb-0">29 <span class="fs-6 fw-normal text-muted">Unit</span></h2>
+                    </div>
+                    <div class="metric-icon-box bg-success bg-opacity-10 text-success">
+                        <i class="bi bi-check-circle-fill"></i>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center gap-1 small mt-2">
+                    <span class="badge bg-success bg-opacity-10 text-success fw-bold py-0.5 px-2">100% Ready</span>
+                    <span class="text-muted">Siap dipinjam</span>
+                </div>
+                <div class="progress mt-3" style="height: 5px;">
+                    <div class="progress-bar bg-success" style="width: 100%"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Metrik 3: Sedang Dipinjam -->
+        <div class="col-sm-6 col-xl-3">
+            <div class="card card-ui p-4 h-100 position-relative overflow-hidden">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                    <div>
+                        <span class="text-muted small fw-semibold text-uppercase tracking-wider">Sedang Dipinjam</span>
+                        <h2 class="fw-bold text-warning mt-1 mb-0" style="color: #d97706 !important;">0 <span class="fs-6 fw-normal text-muted">Unit</span></h2>
+                    </div>
+                    <div class="metric-icon-box bg-warning bg-opacity-10 text-warning">
+                        <i class="bi bi-arrow-left-right text-warning" style="color: #d97706 !important;"></i>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center gap-1 small mt-2">
+                    <span class="badge bg-warning bg-opacity-10 text-warning fw-bold py-0.5 px-2" style="color: #d97706 !important;">0% Aktif</span>
+                    <span class="text-muted">Di luar laboratorium</span>
+                </div>
+                <div class="progress mt-3" style="height: 5px;">
+                    <div class="progress-bar bg-warning" style="width: 0%; background-color: #d97706 !important;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Metrik 4: Menunggu Persetujuan -->
+        <div class="col-sm-6 col-xl-3">
+            <div class="card card-ui p-4 h-100 position-relative overflow-hidden border-danger border-opacity-25" style="background: linear-gradient(180deg, #ffffff 0%, #fff5f5 100%);">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                    <div>
+                        <span class="text-danger small fw-semibold text-uppercase tracking-wider">Perlu Verifikasi</span>
+                        <h2 class="fw-bold text-danger mt-1 mb-0">0 <span class="fs-6 fw-normal text-muted">Surat</span></h2>
+                    </div>
+                    <div class="metric-icon-box bg-danger bg-opacity-10 text-danger position-relative">
+                        <i class="bi bi-bell-fill"></i>
+                                            </div>
+                </div>
+                <div class="d-flex align-items-center gap-1 small mt-2">
+                                            <span class="text-success"><i class="bi bi-check2-circle me-1"></i> Semua tuntas</span>
+                                    </div>
+                <div class="progress mt-3" style="height: 5px;">
+                    <div class="progress-bar bg-danger" style="width: 0%"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- 2. VISUAL ANALYTICS ROW (GRAFIK CHART.JS MODERN) -->
+    <div class="row g-3 mb-4">
+        <!-- Grafik 1: Tren Peminjaman Mingguan (Area Chart) -->
+        <div class="col-lg-8">
+            <div class="card card-ui p-4 h-100">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div>
+                        <h6 class="fw-bold text-dark mb-0">Tren Aktivitas Peminjaman Sarpras</h6>
+                        <span class="text-muted small">Frekuensi peminjaman alat 7 hari operasional terakhir</span>
+                    </div>
+                    <span class="badge bg-light text-primary border small fw-semibold">
+                        <i class="bi bi-graph-up-arrow me-1"></i> Data Real-Time
+                    </span>
+                </div>
+                <div style="height: 240px; position: relative;">
+                    <canvas id="borrowTrendChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Grafik 2: Komposisi Kategori (Doughnut Chart) -->
+        <div class="col-lg-4">
+            <div class="card card-ui p-4 h-100">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div>
+                        <h6 class="fw-bold text-dark mb-0">Distribusi 3 Kategori</h6>
+                        <span class="text-muted small">Porsi ketersediaan inventaris</span>
+                    </div>
+                </div>
+                <div style="height: 180px; position: relative;" class="my-auto">
+                    <canvas id="categoryDonutChart"></canvas>
+                </div>
+                <div class="d-flex justify-content-around text-center border-top pt-3 mt-2 small text-muted">
+                    <div>
+                        <span class="d-inline-block rounded-circle" style="width: 8px; height: 8px; background: #4f46e5;"></span>
+                        <div>Musik (4)</div>
+                    </div>
+                    <div>
+                        <span class="d-inline-block rounded-circle" style="width: 8px; height: 8px; background: #d97706;"></span>
+                        <div>Syuting (5)</div>
+                    </div>
+                    <div>
+                        <span class="d-inline-block rounded-circle" style="width: 8px; height: 8px; background: #0284c7;"></span>
+                        <div>PC (4)</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- 3. TABEL PENGAJUAN & STATUS LAB -->
+    <div class="row g-3 mb-4">
+        <!-- Tabel Pengajuan Real-Time (8 Kolom) -->
+        <div class="col-lg-8">
+            <div class="card card-ui h-100 overflow-hidden">
+                <div class="p-4 border-bottom bg-white d-flex flex-wrap justify-content-between align-items-center gap-2">
+                    <div>
+                        <h5 class="fw-bold text-dark mb-0 d-flex align-items-center gap-2">
+                            <i class="bi bi-file-earmark-text-fill text-primary"></i> Permohonan Peminjaman Masuk
+                        </h5>
+                        <span class="text-muted small">Daftar mahasiswa yang mengajukan sarpras & siap diverifikasi</span>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <a href="http://localhost/admin/peminjaman" class="btn btn-outline-secondary btn-sm px-3 fw-semibold">
+                            Lihat Semua
+                        </a>
+                        <a href="http://localhost/admin/items/create" class="btn btn-primary btn-sm px-3 fw-semibold shadow-sm">
+                            <i class="bi bi-plus-lg me-1"></i> Tambah Sarpras
+                        </a>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0" style="font-size: 0.9rem;">
+                        <thead class="table-light text-secondary small text-uppercase" style="letter-spacing: 0.5px;">
+                            <tr>
+                                <th class="ps-4 py-3">Peminjam</th>
+                                <th>Sarana Prasarana</th>
+                                <th>Durasi Pinjam</th>
+                                <th>Status</th>
+                                <th class="text-end pe-4">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                                                            <tr>
+                                    <td class="ps-4 py-3">
+                                        <div class="d-flex align-items-center gap-2.5">
+                                            <div class="rounded-circle bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 d-flex align-items-center justify-content-center fw-bold" style="width: 36px; height: 36px; font-size: 0.85rem; flex-shrink: 0;">
+                                                KE
+                                            </div>
+                                            <div>
+                                                <div class="fw-bold text-dark">Keisya Hilmi Al-Rachman</div>
+                                                <div class="text-muted" style="font-size: 0.76rem;">
+                                                    <code>JTI-202611-98765</code> • A44231755
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                                                                    <div>
+                                                <span class="badge bg-light text-dark border small fw-normal">
+                                                    Gitar Akustik Elektrik (2 unit)
+                                                </span>
+                                            </div>
+                                                                                    <div>
+                                                <span class="badge bg-light text-dark border small fw-normal">
+                                                    Keyboard Synthesizer 61-Keys (1 unit)
+                                                </span>
+                                            </div>
+                                                                                    <div>
+                                                <span class="badge bg-light text-dark border small fw-normal">
+                                                    Microphone Dynamic Vokal (2 unit)
+                                                </span>
+                                            </div>
+                                                                                    <div>
+                                                <span class="badge bg-light text-dark border small fw-normal">
+                                                    USB Audio Interface 2-Channel (2 unit)
+                                                </span>
+                                            </div>
+                                                                                    <div>
+                                                <span class="badge bg-light text-dark border small fw-normal">
+                                                    Kamera Mirrorless 4K (2 unit)
+                                                </span>
+                                            </div>
+                                                                            </td>
+                                    <td class="small">
+                                        <div>11/11/2026</div>
+                                        <div class="text-danger fw-semibold" style="font-size: 0.78rem;">s/d 14/11/2026</div>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-primary text-white small">
+                                            Disetujui / Sedang Dipinjam
+                                        </span>
+                                    </td>
+                                    <td class="text-end pe-4">
+                                        <div class="btn-group btn-group-sm">
+                                            <a href="http://localhost/admin/peminjaman/1" class="btn btn-primary shadow-sm" title="Kelola & Verifikasi">
+                                                Verifikasi
+                                            </a>
+                                            <a href="http://localhost/peminjaman/1/surat" target="_blank" class="btn btn-outline-secondary" title="Cetak Surat Polije">
+                                                <i class="bi bi-printer"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                                    </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Kolom Kanan: Kesiapan 3 Laboratorium & SOP (4 Kolom) -->
+        <div class="col-lg-4">
+            
+            <!-- Kesiapan 3 Lab -->
+            <div class="card card-ui p-4 mb-3">
+                <h6 class="fw-bold text-dark mb-3 d-flex align-items-center gap-2">
+                    <i class="bi bi-building-check text-primary"></i> Kesiapan Inventaris 3 Lab
+                </h6>
+
+                <div class="d-flex flex-column gap-3">
+                                                                    <div class="p-3 rounded-3 bg-light border">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <span class="fw-bold text-dark small d-flex align-items-center gap-1.5">
+                                    <i class="bi bi-music-note-beamed" style="color: #4f46e5;"></i>
+                                    Alat Musik
+                                </span>
+                                <span class="badge small" style="background: #4f46e5; color: #ffffff;">9 / 9 Unit</span>
+                            </div>
+                            <div class="text-muted small mb-2" style="font-size: 0.76rem;">
+                                4 jenis inventaris terdata
+                            </div>
+                            <div class="progress" style="height: 6px;">
+                                <div class="progress-bar" style="width: 100%; background-color: #4f46e5;"></div>
+                            </div>
+                        </div>
+                                                                    <div class="p-3 rounded-3 bg-light border">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <span class="fw-bold text-dark small d-flex align-items-center gap-1.5">
+                                    <i class="bi bi-camera-video-fill" style="color: #d97706;"></i>
+                                    Alat Syuting
+                                </span>
+                                <span class="badge small" style="background: #d97706; color: #ffffff;">10 / 10 Unit</span>
+                            </div>
+                            <div class="text-muted small mb-2" style="font-size: 0.76rem;">
+                                5 jenis inventaris terdata
+                            </div>
+                            <div class="progress" style="height: 6px;">
+                                <div class="progress-bar" style="width: 100%; background-color: #d97706;"></div>
+                            </div>
+                        </div>
+                                                                    <div class="p-3 rounded-3 bg-light border">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <span class="fw-bold text-dark small d-flex align-items-center gap-1.5">
+                                    <i class="bi bi-pc-display" style="color: #0284c7;"></i>
+                                    PC / Komputer &amp; Periferal
+                                </span>
+                                <span class="badge small" style="background: #0284c7; color: #ffffff;">10 / 10 Unit</span>
+                            </div>
+                            <div class="text-muted small mb-2" style="font-size: 0.76rem;">
+                                4 jenis inventaris terdata
+                            </div>
+                            <div class="progress" style="height: 6px;">
+                                <div class="progress-bar" style="width: 100%; background-color: #0284c7;"></div>
+                            </div>
+                        </div>
+                                    </div>
+            </div>
+
+            <!-- Petunjuk SOP Singkat -->
+            <div class="card card-ui p-4 bg-light border">
+                <h6 class="fw-bold text-dark mb-2 small d-flex align-items-center gap-2">
+                    <i class="bi bi-info-circle-fill text-primary"></i> Prosedur Verifikasi Laboran
+                </h6>
+                <ol class="small text-secondary ps-3 mb-0" style="line-height: 1.55;">
+                    <li>Periksa kelayakan barang sebelum diserahkan.</li>
+                    <li>Wajib meminta lembar <strong>Surat BEM Polije</strong> bertandatangan.</li>
+                    <li>Ubah status menjadi <strong>Disetujui</strong> saat barang diambil mahasiswa.</li>
+                    <li>Ubah status menjadi <strong>Selesai</strong> saat barang dikembalikan lengkap.</li>
+                </ol>
+            </div>
+
+        </div>
+    </div>
+
+        </main>
+
+        <!-- Admin Footer -->
+        <footer class="bg-white border-top py-3 px-4 text-muted small d-flex justify-content-between align-items-center">
+            <div>&copy; 2026 Sistem Peminjaman Sarpras Laboratorium — JTI Polije.</div>
+            <div class="text-primary fw-semibold">SIPEMBAR JTI v2.0 Enterprise</div>
+        </footer>
+    </div>
+
+    <!-- Bootstrap Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+document.addEventListener('DOMContentLoaded', function () {
+    // 1. Chart Tren Peminjaman (Area Chart)
+    const ctxTrend = document.getElementById('borrowTrendChart').getContext('2d');
+    const gradient = ctxTrend.createLinearGradient(0, 0, 0, 240);
+    gradient.addColorStop(0, 'rgba(37, 99, 235, 0.35)');
+    gradient.addColorStop(1, 'rgba(37, 99, 235, 0.0)');
+
+    new Chart(ctxTrend, {
+        type: 'line',
+        data: {
+            labels: ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'],
+            datasets: [{
+                label: 'Frekuensi Peminjaman',
+                data: [3, 5, 2, 6, 8, 4, 3],
+                borderColor: '#2563eb',
+                borderWidth: 2.5,
+                backgroundColor: gradient,
+                fill: true,
+                tension: 0.35,
+                pointBackgroundColor: '#ffffff',
+                pointBorderColor: '#2563eb',
+                pointBorderWidth: 2,
+                pointRadius: 4,
+                pointHoverRadius: 6
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    backgroundColor: '#091322',
+                    padding: 10,
+                    cornerRadius: 8
+                }
+            },
+            scales: {
+                x: {
+                    grid: { display: false },
+                    ticks: { font: { family: 'Plus Jakarta Sans', size: 11 }, color: '#64748b' }
+                },
+                y: {
+                    beginAtZero: true,
+                    grid: { color: '#f1f5f9' },
+                    ticks: { stepSize: 2, font: { family: 'Plus Jakarta Sans', size: 11 }, color: '#64748b' }
+                }
+            }
+        }
+    });
+
+    // 2. Chart Komposisi Kategori (Doughnut Chart)
+    const ctxDonut = document.getElementById('categoryDonutChart').getContext('2d');
+    new Chart(ctxDonut, {
+        type: 'doughnut',
+        data: {
+            labels: ['Alat Musik', 'Alat Syuting', 'PC & Lab'],
+            datasets: [{
+                data: [4, 5, 4],
+                backgroundColor: ['#4f46e5', '#d97706', '#0284c7'],
+                borderWidth: 3,
+                borderColor: '#ffffff',
+                hoverOffset: 4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '72%',
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    backgroundColor: '#091322',
+                    padding: 8,
+                    cornerRadius: 6
+                }
+            }
+        }
+    });
+});
+</script>
+</body>
+</html>
+
