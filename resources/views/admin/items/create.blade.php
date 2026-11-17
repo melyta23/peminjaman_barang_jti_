@@ -1,9 +1,10 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
-@section('title', 'Tambah Barang Baru - Admin')
+@section('title', 'Tambah Sarana Prasarana Baru - Admin SIPEMBAR JTI')
+@section('page_title', 'Tambah Sarana Prasarana Baru')
 
 @section('content')
-<div class="container">
+<div class="pb-3">
     <div class="row justify-content-center">
         <div class="col-lg-8">
             <div class="d-flex justify-content-between align-items-center mb-3">
@@ -56,7 +57,7 @@
                             <div class="col-md-6">
                                 <label for="stok_total" class="form-label fw-semibold">Stok Total Unit <span class="text-danger">*</span></label>
                                 <input type="number" name="stok_total" id="stok_total" class="form-control @error('stok_total') is-invalid @enderror" 
-                                    value="{{ old('stok_total', 1)" min="1" required>
+                                    value="{{ old('stok_total', 1) }}" min="1" required>
                                 @error('stok_total') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
 

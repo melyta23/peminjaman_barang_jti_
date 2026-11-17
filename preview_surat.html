@@ -59,55 +59,85 @@
             align-items: center;
             justify-content: space-between;
             margin-bottom: 4px;
+            width: 100%;
+            box-sizing: border-box;
+            gap: 8px;
         }
 
-        .kop-logo {
+        .kop-logo,
+        .kop-logo-kanan {
             width: 80px;
+            min-width: 80px;
+            max-width: 80px;
             height: 80px;
             object-fit: contain;
-            flex-shrink: 0;
+            flex: 0 0 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .kop-text {
             text-align: center;
-            flex-grow: 1;
-            padding: 0 10px;
+            flex: 1 1 0%;
+            min-width: 0;
+            max-width: calc(100% - 176px);
+            padding: 0 4px;
+            box-sizing: border-box;
         }
 
-        .kop-text h2 {
+        /* Setiap Baris Kop Berdiri Sendiri Sebagai Block Penuh */
+        .kop-line {
+            display: block !important;
+            width: 100%;
+            max-width: 100%;
+            margin: 0;
+            padding: 1px 4px;
+            box-sizing: border-box;
+            white-space: normal !important;
+            word-wrap: break-word !important;
+            overflow-wrap: anywhere !important;
+            word-break: break-word !important;
+        }
+
+        .kop-line-1 {
             font-size: 13.5pt;
             font-weight: bold;
-            margin: 0;
             letter-spacing: 0.5px;
             line-height: 1.25;
             text-transform: uppercase;
         }
 
-        .kop-text h3 {
-            font-size: 13pt;
+        .kop-line-2 {
+            font-size: 12.5pt;
             font-weight: bold;
-            margin: 1px 0;
+            letter-spacing: 0.5px;
             line-height: 1.25;
             text-transform: uppercase;
+            margin-top: 1px;
         }
 
-        .kop-text h1 {
+        .kop-line-3 {
             font-size: 14pt;
             font-weight: bold;
-            margin: 2px 0;
+            letter-spacing: 0.5px;
             line-height: 1.25;
             text-transform: uppercase;
+            margin-top: 1px;
         }
 
-        .kop-text p {
+        .kop-line-alamat {
             font-size: 9.5pt;
-            margin: 1px 0 0 0;
+            font-weight: normal;
             line-height: 1.3;
+            margin-top: 3px;
         }
 
-        .kop-text p a, .kop-text p span {
-            color: #000;
-            text-decoration: underline;
+        .kop-line-kontak {
+            font-size: 9.5pt;
+            font-weight: normal;
+            line-height: 1.3;
+            margin-top: 1px;
         }
 
         /* Garis Ganda Pemisah Kop */
@@ -155,21 +185,18 @@
         }
 
         /* Bagian Tanda Tangan */
-        .ttd-container {
+        .table-ttd-layout {
+            width: 100%;
+            border-collapse: collapse;
+            border: none !important;
             margin-top: 35px;
-            display: flex;
-            justify-content: space-between;
             font-size: 11pt;
             line-height: 1.35;
         }
 
-        .ttd-col {
-            width: 45%;
-        }
-
-        .ttd-space {
-            height: 75px;
-            position: relative;
+        .table-ttd-layout td {
+            border: none !important;
+            padding: 0;
         }
 
         /* Gambar Stempel BEM */
@@ -262,47 +289,21 @@
         <div class="kop-wrapper">
             <!-- Logo Polije Kiri -->
             <div class="kop-logo">
-                <svg viewBox="0 0 100 100" width="80" height="80">
-                    <!-- Polije Pentagon Shield -->
-                    <polygon points="50,4 93,22 80,82 50,96 20,82 7,22" fill="#0080c8" stroke="#004d80" stroke-width="2"/>
-                    <polygon points="50,11 86,26 75,76 50,88 25,76 14,26" fill="#0099e6"/>
-                    <!-- Rice/Wheat and Leaf Motif -->
-                    <circle cx="50" cy="50" r="22" fill="#ffffff" opacity="0.95"/>
-                    <path d="M50,30 Q58,45 50,65 Q42,45 50,30" fill="#facc15" stroke="#ca8a04" stroke-width="1"/>
-                    <path d="M43,38 Q50,45 44,55" stroke="#15803d" stroke-width="2" fill="none"/>
-                    <path d="M57,38 Q50,45 56,55" stroke="#15803d" stroke-width="2" fill="none"/>
-                    <!-- Text Arc -->
-                    <path id="polijeArc" d="M 22 58 A 30 30 0 0 0 78 58" fill="none"/>
-                    <text font-size="6" font-family="'Times New Roman', serif" font-weight="bold" fill="#003366" text-anchor="middle">
-                        <textPath href="#polijeArc" startOffset="50%">POLITEKNIK NEGERI JEMBER</textPath>
-                    </text>
-                </svg>
+                <img src="public/images/logo-polije.png" alt="Logo Polije" width="80" height="80" style="object-fit: contain;">
             </div>
 
             <!-- Teks Kop Surat -->
             <div class="kop-text">
-                <h2>POLITEKNIK NEGERI JEMBER</h2>
-                <h3>KELUARGA MAHASISWA</h3>
-                <h1>BADAN EKSEKUTIF MAHASISWA</h1>
-                <p>
-                    Jalan Mastrip Kotak Pos 164 Jember 68121<br>
-                    Hp. 081287349270, Email : <span>bem@polije.ac.id</span>
-                </p>
+                <div class="kop-line kop-line-1">POLITEKNIK NEGERI JEMBER</div>
+                <div class="kop-line kop-line-2">KELUARGA MAHASISWA</div>
+                <div class="kop-line kop-line-3">PROGRAM STUDI D4 TEKNIK INFORMATIKA</div>
+                <div class="kop-line kop-line-alamat">Jalan Mastrip Kotak Pos 164 Jember 68121</div>
+                <div class="kop-line kop-line-kontak">Hp. 081287349270, Email : bem@polije.ac.id</div>
             </div>
 
-            <!-- Logo BEM Kanan -->
-            <div class="kop-logo">
-                <svg viewBox="0 0 100 100" width="80" height="80">
-                    <circle cx="50" cy="50" r="46" fill="#0080c8" stroke="#004d80" stroke-width="2"/>
-                    <circle cx="50" cy="50" r="40" fill="#0099e6"/>
-                    <circle cx="50" cy="50" r="34" fill="#ffffff"/>
-                    <!-- Tunas BEM -->
-                    <path d="M50,22 Q60,38 50,60 Q40,38 50,22" fill="#eab308"/>
-                    <path d="M42,32 Q50,42 43,56" stroke="#16a34a" stroke-width="2.5" fill="none"/>
-                    <path d="M58,32 Q50,42 57,56" stroke="#16a34a" stroke-width="2.5" fill="none"/>
-                    <rect x="36" y="62" width="28" height="6" rx="2" fill="#004d80"/>
-                    <text x="50" y="67" font-size="4.5" font-family="'Times New Roman', serif" font-weight="bold" fill="#ffffff" text-anchor="middle">BEM POLIJE</text>
-                </svg>
+            <!-- Logo Polije Kanan -->
+            <div class="kop-logo kop-logo-kanan">
+                <img src="public/images/logo-polije.png" alt="Logo Polije" width="80" height="80" style="object-fit: contain;">
             </div>
         </div>
 
@@ -360,7 +361,7 @@
                 <tr>
                     <td>waktu</td>
                     <td>:</td>
-                    <td>07.00 WIB – selesai</td>
+                    <td>07.00 WIB – 16.00 WIB</td>
                 </tr>
                 <tr>
                     <td>tempat</td>
@@ -374,65 +375,41 @@
             </p>
         </div>
 
-        <!-- Tanda Tangan Halaman 1 -->
-        <div class="ttd-container">
-            <!-- Kolom Kiri: Mengetahui -->
-            <div class="ttd-col">
-                <p style="margin: 0;">Mengetahui,</p>
-                <p style="margin: 0;">Koordinator Minat, Bakat dan</p>
-                <p style="margin: 0;">Kedisiplinan Mahasiswa</p>
-                
-                <div class="ttd-space d-flex align-items-center">
-                    <!-- Goresan TTD Formal -->
-                    <svg width="140" height="55" viewBox="0 0 140 55">
-                        <path d="M 15 45 Q 35 10 50 40 T 75 15 Q 90 35 110 25 T 130 35" fill="none" stroke="#000000" stroke-width="1.8"/>
-                        <path d="M 25 40 Q 60 5 80 48" fill="none" stroke="#000000" stroke-width="1.2"/>
-                    </svg>
-                </div>
+        <!-- Tanda Tangan Halaman 1 (Sejajar & Lurus Sempurna Secara Horizontal) -->
+        <table class="table-ttd-layout" style="width: 100%; border-collapse: collapse; border: none; margin-top: 35px;">
+            <tbody>
+                <!-- Baris 1: Jabatan Atas (Sejajar Rata Atas) -->
+                <tr>
+                    <td class="ttd-col" style="width: 50%; vertical-align: top; padding: 0 15px 0 0; border: none;">
+                        <p style="margin: 0;">Mengetahui,</p>
+                        <p style="margin: 0;">Koordinator Minat, Bakat dan</p>
+                        <p style="margin: 0;">Kedisiplinan Mahasiswa</p>
+                    </td>
+                    <td class="ttd-col" style="width: 50%; vertical-align: top; padding: 0 0 0 25px; border: none;">
+                        <p style="margin: 0;">Presiden Mahasiswa</p>
+                        <p style="margin: 0;">Politeknik Negeri Jember</p>
+                    </td>
+                </tr>
 
-                <p style="margin: 0; font-weight: bold; text-decoration: underline;">Iwan Setiadi, S.Sos</p>
-                <p style="margin: 0;">NIP. 197212202001121001</p>
-            </div>
+                <!-- Baris 2: Ruang TTD Kosong (Tinggi Seragam 75px) -->
+                <tr>
+                    <td style="height: 75px; border: none;"></td>
+                    <td style="height: 75px; border: none;"></td>
+                </tr>
 
-            <!-- Kolom Kanan: Peminjam / Presma -->
-            <div class="ttd-col" style="text-align: left; padding-left: 20px;">
-                <p style="margin: 0;">Presiden Mahasiswa</p>
-                <p style="margin: 0;">Politeknik Negeri Jember</p>
-                
-                <div class="ttd-space">
-                    <!-- Stempel BEM Biru Autentik seperti di Foto -->
-                    <div class="stempel-badge">
-                        <svg viewBox="0 0 120 120" width="115" height="115">
-                            <circle cx="60" cy="60" r="54" fill="none" stroke="#1d4ed8" stroke-width="2.5" stroke-dasharray="6,2"/>
-                            <circle cx="60" cy="60" r="47" fill="none" stroke="#1d4ed8" stroke-width="1.5"/>
-                            <path id="stampArcTop" d="M 18 60 A 42 42 0 0 1 102 60" fill="none"/>
-                            <text font-size="7.5" font-family="'Times New Roman', serif" font-weight="bold" fill="#1d4ed8" text-anchor="middle">
-                                <textPath href="#stampArcTop" startOffset="50%">BADAN EKSEKUTIF MAHASISWA</textPath>
-                            </text>
-                            <!-- Simbol Padi Stempel -->
-                            <path d="M60,40 Q68,52 60,70 Q52,52 60,40" fill="none" stroke="#1d4ed8" stroke-width="2"/>
-                            <path d="M54,48 Q60,54 55,65" stroke="#1d4ed8" stroke-width="1.8" fill="none"/>
-                            <path d="M66,48 Q60,54 65,65" stroke="#1d4ed8" stroke-width="1.8" fill="none"/>
-                            <path id="stampArcBot" d="M 18 60 A 42 42 0 0 0 102 60" fill="none"/>
-                            <text font-size="7.5" font-family="'Times New Roman', serif" font-weight="bold" fill="#1d4ed8" text-anchor="middle">
-                                <textPath href="#stampArcBot" startOffset="50%">POLITEKNIK NEGERI JEMBER</textPath>
-                            </text>
-                        </svg>
-                    </div>
-
-                    <!-- Goresan TTD Peminjam -->
-                    <div style="padding-top: 15px; position: relative; z-index: 2;">
-                        <svg width="140" height="55" viewBox="0 0 140 55">
-                            <path d="M 20 40 Q 40 5 60 45 T 90 20 Q 105 38 125 30" fill="none" stroke="#000080" stroke-width="1.8"/>
-                            <path d="M 35 25 L 85 42" fill="none" stroke="#000080" stroke-width="1.5"/>
-                        </svg>
-                    </div>
-                </div>
-
-                <p style="margin: 0; font-weight: bold; text-decoration: underline;">Keisya Hilmi Al-Rachman</p>
-                <p style="margin: 0;">NIM. A44231755</p>
-            </div>
-        </div>
+                <!-- Baris 3: Nama Lengkap & NIP/NIM (Pasti Sejajar & Lurus Horizontal) -->
+                <tr>
+                    <td class="ttd-col" style="width: 50%; vertical-align: bottom; padding: 0 15px 0 0; border: none;">
+                        <p style="margin: 0; font-weight: bold; text-decoration: underline; display: block !important; width: 100%;">Iwan Setiadi, S.Sos</p>
+                        <p style="margin: 0; display: block !important; width: 100%; clear: both;">NIP. 197212202001121001</p>
+                    </td>
+                    <td class="ttd-col" style="width: 50%; vertical-align: bottom; padding: 0 0 0 25px; border: none;">
+                        <p style="margin: 0; font-weight: bold; text-decoration: underline; display: block !important; width: 100%;">Keisya Hilmi Al-Rachman</p>
+                        <p style="margin: 0; display: block !important; width: 100%; clear: both;">NIM. A44231755</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 
 
@@ -442,42 +419,22 @@
     <div class="sheet">
         <!-- KOP SURAT RESMI (Sama persis seperti di foto) -->
         <div class="kop-wrapper">
+            <!-- Logo Polije Kiri Halaman 2 -->
             <div class="kop-logo">
-                <svg viewBox="0 0 100 100" width="80" height="80">
-                    <polygon points="50,4 93,22 80,82 50,96 20,82 7,22" fill="#0080c8" stroke="#004d80" stroke-width="2"/>
-                    <polygon points="50,11 86,26 75,76 50,88 25,76 14,26" fill="#0099e6"/>
-                    <circle cx="50" cy="50" r="22" fill="#ffffff" opacity="0.95"/>
-                    <path d="M50,30 Q58,45 50,65 Q42,45 50,30" fill="#facc15" stroke="#ca8a04" stroke-width="1"/>
-                    <path d="M43,38 Q50,45 44,55" stroke="#15803d" stroke-width="2" fill="none"/>
-                    <path d="M57,38 Q50,45 56,55" stroke="#15803d" stroke-width="2" fill="none"/>
-                    <path id="polijeArc2" d="M 22 58 A 30 30 0 0 0 78 58" fill="none"/>
-                    <text font-size="6" font-family="'Times New Roman', serif" font-weight="bold" fill="#003366" text-anchor="middle">
-                        <textPath href="#polijeArc2" startOffset="50%">POLITEKNIK NEGERI JEMBER</textPath>
-                    </text>
-                </svg>
+                <img src="public/images/logo-polije.png" alt="Logo Polije" width="80" height="80" style="object-fit: contain;">
             </div>
 
             <div class="kop-text">
-                <h2>POLITEKNIK NEGERI JEMBER</h2>
-                <h3>KELUARGA MAHASISWA</h3>
-                <h1>BADAN EKSEKUTIF MAHASISWA</h1>
-                <p>
-                    Jalan Mastrip Kotak Pos 164 Jember 68121<br>
-                    Hp. 081287349270, Email : <span>bem@polije.ac.id</span>
-                </p>
+                <div class="kop-line kop-line-1">POLITEKNIK NEGERI JEMBER</div>
+                <div class="kop-line kop-line-2">KELUARGA MAHASISWA</div>
+                <div class="kop-line kop-line-3">PROGRAM STUDI D4 TEKNIK INFORMATIKA</div>
+                <div class="kop-line kop-line-alamat">Jalan Mastrip Kotak Pos 164 Jember 68121</div>
+                <div class="kop-line kop-line-kontak">Hp. 081287349270, Email : bem@polije.ac.id</div>
             </div>
 
-            <div class="kop-logo">
-                <svg viewBox="0 0 100 100" width="80" height="80">
-                    <circle cx="50" cy="50" r="46" fill="#0080c8" stroke="#004d80" stroke-width="2"/>
-                    <circle cx="50" cy="50" r="40" fill="#0099e6"/>
-                    <circle cx="50" cy="50" r="34" fill="#ffffff"/>
-                    <path d="M50,22 Q60,38 50,60 Q40,38 50,22" fill="#eab308"/>
-                    <path d="M42,32 Q50,42 43,56" stroke="#16a34a" stroke-width="2.5" fill="none"/>
-                    <path d="M58,32 Q50,42 57,56" stroke="#16a34a" stroke-width="2.5" fill="none"/>
-                    <rect x="36" y="62" width="28" height="6" rx="2" fill="#004d80"/>
-                    <text x="50" y="67" font-size="4.5" font-family="'Times New Roman', serif" font-weight="bold" fill="#ffffff" text-anchor="middle">BEM POLIJE</text>
-                </svg>
+            <!-- Logo Polije Kanan Halaman 2 -->
+            <div class="kop-logo kop-logo-kanan">
+                <img src="public/images/logo-polije.png" alt="Logo Polije" width="80" height="80" style="object-fit: contain;">
             </div>
         </div>
 
@@ -498,47 +455,72 @@
                 </tr>
             </thead>
             <tbody>
-                                    <tr>
-                        <td class="col-no">1.</td>
-                        <td>
-                            Gitar Akustik Elektrik
-                                                            <span style="font-size: 10pt; color: #333;">(Yamaha FX310)</span>
-                                                    </td>
-                        <td class="col-jumlah">2</td>
-                    </tr>
-                                    <tr>
-                        <td class="col-no">2.</td>
-                        <td>
-                            Keyboard Synthesizer 61-Keys
-                                                            <span style="font-size: 10pt; color: #333;">(Roland XPS-30)</span>
-                                                    </td>
-                        <td class="col-jumlah">1</td>
-                    </tr>
-                                    <tr>
-                        <td class="col-no">3.</td>
-                        <td>
-                            Microphone Dynamic Vokal
-                                                            <span style="font-size: 10pt; color: #333;">(Shure SM58)</span>
-                                                    </td>
-                        <td class="col-jumlah">2</td>
-                    </tr>
-                                    <tr>
-                        <td class="col-no">4.</td>
-                        <td>
-                            USB Audio Interface 2-Channel
-                                                            <span style="font-size: 10pt; color: #333;">(Focusrite Scarlett 2i2 Gen 3)</span>
-                                                    </td>
-                        <td class="col-jumlah">2</td>
-                    </tr>
-                                    <tr>
-                        <td class="col-no">5.</td>
-                        <td>
-                            Kamera Mirrorless 4K
-                                                            <span style="font-size: 10pt; color: #333;">(Sony Alpha a6400 (Kit 16-50mm))</span>
-                                                    </td>
-                        <td class="col-jumlah">2</td>
-                    </tr>
-                            </tbody>
+                <tr>
+                    <td class="col-no">1.</td>
+                    <td contenteditable="true">Gitar Akustik Elektrik <span style="font-size: 10pt; color: #333;">(Yamaha FX310)</span></td>
+                    <td class="col-jumlah" contenteditable="true">2</td>
+                </tr>
+                <tr>
+                    <td class="col-no">2.</td>
+                    <td contenteditable="true">Keyboard Synthesizer 61-Keys <span style="font-size: 10pt; color: #333;">(Roland XPS-30)</span></td>
+                    <td class="col-jumlah" contenteditable="true">1</td>
+                </tr>
+                <tr>
+                    <td class="col-no">3.</td>
+                    <td contenteditable="true">Microphone Dynamic Vokal <span style="font-size: 10pt; color: #333;">(Shure SM58)</span></td>
+                    <td class="col-jumlah" contenteditable="true">4</td>
+                </tr>
+                <tr>
+                    <td class="col-no">4.</td>
+                    <td contenteditable="true">USB Audio Interface 2-Channel <span style="font-size: 10pt; color: #333;">(Focusrite Scarlett 2i2 Gen 3)</span></td>
+                    <td class="col-jumlah" contenteditable="true">2</td>
+                </tr>
+                <tr>
+                    <td class="col-no">5.</td>
+                    <td contenteditable="true">Kamera Mirrorless 4K <span style="font-size: 10pt; color: #333;">(Sony Alpha a6400 (Kit 16-50mm))</span></td>
+                    <td class="col-jumlah" contenteditable="true">2</td>
+                </tr>
+                <tr>
+                    <td class="col-no">6.</td>
+                    <td contenteditable="true">Tripod Video Profesional <span style="font-size: 10pt; color: #333;">(Libec TH-X)</span></td>
+                    <td class="col-jumlah" contenteditable="true">3</td>
+                </tr>
+                <tr>
+                    <td class="col-no">7.</td>
+                    <td contenteditable="true">Lighting Studio LED Softbox <span style="font-size: 10pt; color: #333;">(Godox SL60W 5600K)</span></td>
+                    <td class="col-jumlah" contenteditable="true">2</td>
+                </tr>
+                <tr>
+                    <td class="col-no">8.</td>
+                    <td contenteditable="true">Gimbal Stabilizer 3-Axis <span style="font-size: 10pt; color: #333;">(DJI Ronin-SC)</span></td>
+                    <td class="col-jumlah" contenteditable="true">1</td>
+                </tr>
+                <tr>
+                    <td class="col-no">9.</td>
+                    <td contenteditable="true">Wireless Clip-On Microphone (2 TX + 1 RX) <span style="font-size: 10pt; color: #333;">(Boya BY-XM6-S2)</span></td>
+                    <td class="col-jumlah" contenteditable="true">2</td>
+                </tr>
+                <tr>
+                    <td class="col-no">10.</td>
+                    <td contenteditable="true">Laptop Core i7 Gen 13 <span style="font-size: 10pt; color: #333;">(Acer Swift Go 14 OLED)</span></td>
+                    <td class="col-jumlah" contenteditable="true">3</td>
+                </tr>
+                <tr>
+                    <td class="col-no">11.</td>
+                    <td contenteditable="true">Pen Display Drawing Tablet <span style="font-size: 10pt; color: #333;">(Wacom Intuos Pro Medium PTH-660)</span></td>
+                    <td class="col-jumlah" contenteditable="true">3</td>
+                </tr>
+                <tr>
+                    <td class="col-no">12.</td>
+                    <td contenteditable="true">Monitor Gaming/Editing 24 Inch 144Hz <span style="font-size: 10pt; color: #333;">(LG UltraGear 24GN600-B IPS)</span></td>
+                    <td class="col-jumlah" contenteditable="true">2</td>
+                </tr>
+                <tr>
+                    <td class="col-no">13.</td>
+                    <td contenteditable="true">Unit PC Workstation Tower <span style="font-size: 10pt; color: #333;">(Custom Ryzen 7 5700X / RTX 3060 12GB)</span></td>
+                    <td class="col-jumlah" contenteditable="true">2</td>
+                </tr>
+            </tbody>
         </table>
     </div>
 

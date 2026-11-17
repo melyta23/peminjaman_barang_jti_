@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Admin Console') - SIPEMBAR JTI Polije</title>
+    <link rel="icon" type="image/png" href="{{ asset('images/logo-polije.png') }}">
 
     <!-- Bootstrap 5.3.3 & Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -20,11 +21,13 @@
 
     <style>
         :root {
-            --sidebar-w: 260px;
-            --navy-dark: #091322;
+            --bs-primary: #3b6ea5;
+            --bs-primary-rgb: 59, 110, 165;
+            --sidebar-w: 270px;
+            --navy-dark: #08111e;
             --navy-card: #0f1d32;
-            --primary: #2563eb;
-            --primary-hover: #1d4ed8;
+            --primary: #3b6ea5;
+            --primary-hover: #2f5986;
             --slate-bg: #f8fafc;
             --text-dark: #0f172a;
             --text-muted: #64748b;
@@ -42,11 +45,11 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        /* SIDEBAR MODERN */
+        /* SIDEBAR MODERN EXECUTIVE */
         .admin-sidebar {
             width: var(--sidebar-w);
             min-height: 100vh;
-            background-color: var(--navy-dark);
+            background: linear-gradient(180deg, #091322 0%, #060b14 100%);
             color: #94a3b8;
             position: fixed;
             top: 0;
@@ -56,90 +59,255 @@
             display: flex;
             flex-direction: column;
             border-right: 1px solid rgba(255, 255, 255, 0.08);
-            transition: all 0.25s ease;
+            box-shadow: 4px 0 24px rgba(0, 0, 0, 0.25);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Ambient subtle aura inside sidebar top */
+        .admin-sidebar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 220px;
+            background: radial-gradient(ellipse at 50% 0%, rgba(37, 99, 235, 0.18) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
         }
 
         .sidebar-brand {
-            padding: 1.25rem 1.5rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 1.3rem 1.35rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.07);
             display: flex;
             align-items: center;
             gap: 12px;
             text-decoration: none;
+            position: relative;
+            z-index: 1;
+            background: rgba(255, 255, 255, 0.015);
         }
 
         .sidebar-brand-logo {
-            width: 38px;
-            height: 38px;
+            width: 42px;
+            height: 42px;
             background: #ffffff;
-            border-radius: 10px;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.15);
+            transition: transform 0.2s ease;
+        }
+
+        .sidebar-brand:hover .sidebar-brand-logo {
+            transform: scale(1.05);
         }
 
         .sidebar-menu {
             padding: 1rem 0.75rem;
             flex-grow: 1;
             overflow-y: auto;
+            position: relative;
+            z-index: 1;
         }
 
         .menu-header {
-            font-size: 0.68rem;
+            font-size: 0.65rem;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 1.2px;
             color: #64748b;
-            padding: 0.75rem 0.75rem 0.25rem 0.75rem;
+            padding: 0.85rem 0.65rem 0.35rem 0.65rem;
             font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .menu-header::after {
+            content: '';
+            flex-grow: 1;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.06);
         }
 
         .sidebar-link {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0.65rem 0.85rem;
+            padding: 0.6rem 0.75rem;
             color: #94a3b8;
-            border-radius: 8px;
+            border-radius: 10px;
             font-weight: 500;
-            font-size: 0.88rem;
+            font-size: 0.86rem;
             text-decoration: none;
-            margin-bottom: 2px;
-            transition: all 0.15s ease;
+            margin-bottom: 3px;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
         }
 
-        .sidebar-link i.link-icon {
-            font-size: 1.1rem;
-            margin-right: 10px;
-            color: #64748b;
-            transition: color 0.15s ease;
+        .sidebar-link-content {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .link-icon-box {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.04);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            flex-shrink: 0;
+            transition: all 0.2s ease;
+            color: #94a3b8;
         }
 
         .sidebar-link:hover {
             color: #ffffff;
             background: rgba(255, 255, 255, 0.06);
+            transform: translateX(3px);
         }
 
-        .sidebar-link:hover i.link-icon {
-            color: #38bdf8;
+        .sidebar-link:hover .link-icon-box {
+            background: rgba(37, 99, 235, 0.2);
+            color: #60a5fa;
         }
 
         .sidebar-link.active {
             color: #ffffff;
-            background: #2563eb;
+            background: linear-gradient(135deg, #3b6ea5 0%, #2f5986 100%);
             font-weight: 600;
-            box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
+            box-shadow: 0 4px 16px rgba(59, 110, 165, 0.35);
         }
 
-        .sidebar-link.active i.link-icon {
+        .sidebar-link.active .link-icon-box {
+            background: rgba(255, 255, 255, 0.2);
             color: #ffffff;
         }
 
+        .sidebar-link-action {
+            border: 1px dashed rgba(34, 197, 94, 0.4);
+            background: rgba(34, 197, 94, 0.06);
+            color: #4ade80;
+        }
+
+        .sidebar-link-action:hover {
+            background: rgba(34, 197, 94, 0.16);
+            border-color: rgba(34, 197, 94, 0.7);
+            color: #ffffff;
+        }
+
+        .sidebar-link-action .link-icon-box {
+            background: rgba(34, 197, 94, 0.2);
+            color: #4ade80;
+        }
+
+        /* Sidebar Mini Status Widget */
+        .sidebar-widget {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            border-radius: 12px;
+            padding: 12px 14px;
+            margin: 14px 4px 8px 4px;
+        }
+
+        /* Sidebar User Footer */
         .sidebar-user {
             padding: 1rem 1.25rem;
             border-top: 1px solid rgba(255, 255, 255, 0.08);
-            background: rgba(0, 0, 0, 0.2);
+            background: rgba(0, 0, 0, 0.35);
+            position: relative;
+            z-index: 1;
+        }
+
+        .sidebar-avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #3b6ea5 0%, #0a1f44 100%);
+            border: 2px solid rgba(255, 255, 255, 0.15);
+            color: #ffffff;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.95rem;
+            flex-shrink: 0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+        }
+
+        /* Soft Blue Overrides for Admin Components */
+        .btn-primary {
+            background-color: var(--primary) !important;
+            border-color: var(--primary) !important;
+            color: #ffffff !important;
+        }
+        .btn-primary:hover, .btn-primary:focus, .btn-primary:active {
+            background-color: var(--primary-hover) !important;
+            border-color: var(--primary-hover) !important;
+            color: #ffffff !important;
+        }
+        .btn-outline-primary {
+            color: var(--primary) !important;
+            border-color: var(--primary) !important;
+        }
+        .btn-outline-primary:hover {
+            background-color: var(--primary) !important;
+            color: #ffffff !important;
+        }
+        .text-primary {
+            color: var(--primary) !important;
+        }
+        .bg-primary:not([class*="bg-opacity"]) {
+            background-color: var(--primary) !important;
+        }
+        .border-primary {
+            border-color: var(--primary) !important;
+        }
+
+        .btn-sidebar-logout {
+            width: 34px;
+            height: 34px;
+            border-radius: 8px;
+            border: 1px solid rgba(239, 68, 68, 0.25);
+            background: rgba(239, 68, 68, 0.08);
+            color: #f87171;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .btn-sidebar-logout:hover {
+            background: #ef4444;
+            color: #ffffff;
+            border-color: #ef4444;
+            transform: scale(1.06);
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.35);
+        }
+
+        /* Backdrop overlay for mobile */
+        .sidebar-backdrop {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(10, 19, 34, 0.65);
+            backdrop-filter: blur(3px);
+            z-index: 1035;
+        }
+        .sidebar-backdrop.show {
+            display: block;
         }
 
         /* MAIN WRAPPER */
@@ -239,87 +407,148 @@
     @stack('styles')
 </head>
 <body>
+    @php
+        $pendingCount = \App\Models\Borrowing::where('status', 'menunggu')->count();
+    @endphp
+
+    <!-- BACKDROP OVERLAY FOR MOBILE -->
+    <div class="sidebar-backdrop d-lg-none" id="sidebarBackdrop" onclick="toggleSidebar()"></div>
 
     <!-- 1. SIDEBAR ADMINISTRATOR -->
     <aside class="admin-sidebar" id="adminSidebar">
         <!-- Brand Header -->
         <a href="{{ route('admin.dashboard') }}" class="sidebar-brand">
             <div class="sidebar-brand-logo">
-                <svg viewBox="0 0 100 100" width="28" height="28">
-                    <polygon points="50,4 93,22 80,82 50,96 20,82 7,22" fill="#0080c8"/>
-                    <circle cx="50" cy="50" r="22" fill="#ffffff"/>
-                    <path d="M50,30 Q58,45 50,65 Q42,45 50,30" fill="#facc15"/>
-                    <path d="M43,38 Q50,45 44,55" stroke="#15803d" stroke-width="2" fill="none"/>
-                    <path d="M57,38 Q50,45 56,55" stroke="#15803d" stroke-width="2" fill="none"/>
-                </svg>
+                <img src="{{ asset('images/logo-polije.png') }}" alt="Logo Politeknik Negeri Jember" width="30" height="30" style="object-fit: contain;">
             </div>
-            <div class="d-flex flex-column">
-                <span class="text-white fw-bold fs-6" style="letter-spacing: -0.3px;">SIPEMBAR JTI</span>
-                <span class="text-white-50 small" style="font-size: 0.7rem;">COMMAND CENTER</span>
+            <div class="d-flex flex-column overflow-hidden">
+                <div class="d-flex align-items-center gap-1.5">
+                    <span class="text-white fw-bold fs-6" style="letter-spacing: -0.3px;">SIPEMBAR JTI</span>
+                    <span class="badge" style="background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.35); font-size: 0.62rem; font-weight: 700; padding: 2px 6px; border-radius: 4px;">PRO</span>
+                </div>
+                <span class="text-white-50 small text-truncate" style="font-size: 0.68rem; letter-spacing: 0.5px;">POLIJE COMMAND CENTER</span>
             </div>
         </a>
 
         <!-- Sidebar Navigation Menu -->
         <div class="sidebar-menu">
             <div class="menu-header">Menu Utama</div>
+            
             <a href="{{ route('admin.dashboard') }}" class="sidebar-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
-                <div><i class="bi bi-grid-1x2-fill link-icon"></i> Dashboard Kontrol</div>
+                <div class="sidebar-link-content">
+                    <div class="link-icon-box"><i class="bi bi-grid-1x2-fill"></i></div>
+                    <span>Dashboard Kontrol</span>
+                </div>
             </a>
+
             <a href="{{ route('admin.borrowings.index') }}" class="sidebar-link {{ request()->routeIs('admin.borrowings.*') ? 'active' : '' }}">
-                <div><i class="bi bi-inbox-fill link-icon"></i> Data Peminjaman</div>
-                @php
-                    $pendingCount = \App\Models\Borrowing::where('status', 'menunggu')->count();
-                @endphp
+                <div class="sidebar-link-content">
+                    <div class="link-icon-box"><i class="bi bi-inbox-fill"></i></div>
+                    <span>Data Peminjaman</span>
+                </div>
                 @if($pendingCount > 0)
-                    <span class="badge bg-danger rounded-pill px-2 py-0.5" style="font-size: 0.72rem;">{{ $pendingCount }}</span>
+                    <span class="badge bg-danger rounded-pill px-2 py-0.5" style="font-size: 0.72rem; box-shadow: 0 0 10px rgba(239,68,68,0.5);">{{ $pendingCount }}</span>
                 @endif
             </a>
 
-            <div class="menu-header mt-3">Manajemen Inventaris 3 Lab</div>
+            <div class="menu-header mt-3">Inventaris 3 Lab JTI</div>
+            
             <a href="{{ route('admin.items.index') }}" class="sidebar-link {{ request()->routeIs('admin.items.index') && !request('category_id') ? 'active' : '' }}">
-                <div><i class="bi bi-collection-fill link-icon"></i> Semua Sarpras Lab</div>
-                <span class="badge bg-secondary bg-opacity-25 text-white-50 small">32 Unit</span>
-            </a>
-            <a href="{{ route('admin.items.index', ['category_id' => 1]) }}" class="sidebar-link {{ request('category_id') == 1 ? 'active' : '' }}">
-                <div><i class="bi bi-music-note-beamed link-icon" style="color: #818cf8;"></i> Alat Musik & Audio</div>
-            </a>
-            <a href="{{ route('admin.items.index', ['category_id' => 2]) }}" class="sidebar-link {{ request('category_id') == 2 ? 'active' : '' }}">
-                <div><i class="bi bi-camera-video-fill link-icon" style="color: #fbbf24;"></i> Alat Syuting & Video</div>
-            </a>
-            <a href="{{ route('admin.items.index', ['category_id' => 3]) }}" class="sidebar-link {{ request('category_id') == 3 ? 'active' : '' }}">
-                <div><i class="bi bi-pc-display link-icon" style="color: #38bdf8;"></i> PC & Lab Komputer</div>
-            </a>
-            <a href="{{ route('admin.items.create') }}" class="sidebar-link {{ request()->routeIs('admin.items.create') ? 'active' : '' }}">
-                <div><i class="bi bi-plus-circle-fill link-icon text-success"></i> Tambah Sarana Baru</div>
+                <div class="sidebar-link-content">
+                    <div class="link-icon-box"><i class="bi bi-collection-fill"></i></div>
+                    <span>Semua Sarpras Lab</span>
+                </div>
+                <span class="badge" style="background: rgba(255, 255, 255, 0.12); color: rgba(255, 255, 255, 0.85); font-size: 0.72rem; padding: 3px 8px; border-radius: 50rem;">{{ \App\Models\Item::sum('stok_total') }}</span>
             </a>
 
-            <div class="menu-header mt-3">Tautan Eksternal</div>
+            <a href="{{ route('admin.items.index', ['category_id' => 1]) }}" class="sidebar-link {{ request('category_id') == 1 ? 'active' : '' }}">
+                <div class="sidebar-link-content">
+                    <div class="link-icon-box" style="color: #818cf8;"><i class="bi bi-music-note-beamed"></i></div>
+                    <span>Alat Musik & Audio</span>
+                </div>
+                <span class="small text-white-50" style="font-size: 0.72rem;">Lab 1</span>
+            </a>
+
+            <a href="{{ route('admin.items.index', ['category_id' => 2]) }}" class="sidebar-link {{ request('category_id') == 2 ? 'active' : '' }}">
+                <div class="sidebar-link-content">
+                    <div class="link-icon-box" style="color: #fbbf24;"><i class="bi bi-camera-video-fill"></i></div>
+                    <span>Alat Syuting & Video</span>
+                </div>
+                <span class="small text-white-50" style="font-size: 0.72rem;">Lab 2</span>
+            </a>
+
+            <a href="{{ route('admin.items.index', ['category_id' => 3]) }}" class="sidebar-link {{ request('category_id') == 3 ? 'active' : '' }}">
+                <div class="sidebar-link-content">
+                    <div class="link-icon-box" style="color: #38bdf8;"><i class="bi bi-pc-display"></i></div>
+                    <span>PC & Lab Komputer</span>
+                </div>
+                <span class="small text-white-50" style="font-size: 0.72rem;">Lab 3</span>
+            </a>
+
+            <div class="mt-2 mb-1">
+                <a href="{{ route('admin.items.create') }}" class="sidebar-link sidebar-link-action {{ request()->routeIs('admin.items.create') ? 'active' : '' }}">
+                    <div class="sidebar-link-content">
+                        <div class="link-icon-box"><i class="bi bi-plus-lg"></i></div>
+                        <span class="fw-semibold">Tambah Sarana Baru</span>
+                    </div>
+                    <i class="bi bi-arrow-right-short small"></i>
+                </a>
+            </div>
+
+            <!-- Mini Live Status Card inside Sidebar -->
+            <div class="sidebar-widget">
+                <div class="d-flex align-items-center justify-content-between mb-2">
+                    <span class="text-white small fw-semibold d-flex align-items-center gap-1.5" style="font-size: 0.75rem;">
+                        <span class="pulse-online me-1"></span> Sistem Terhubung
+                    </span>
+                    <span class="badge" style="background: rgba(34, 197, 94, 0.2); color: #4ade80; border: 1px solid rgba(74, 222, 128, 0.4); font-size: 0.65rem; font-weight: 700; letter-spacing: 0.5px;">ONLINE</span>
+                </div>
+                <div class="d-flex justify-content-between text-white-50" style="font-size: 0.72rem;">
+                    <span>Inventaris Lab</span>
+                    <strong class="text-white">{{ \App\Models\Item::count() }} Jenis Sarpras</strong>
+                </div>
+            </div>
+
+            <div class="menu-header mt-2">Akses Cepat & Publik</div>
+            
             <a href="{{ route('home') }}" target="_blank" class="sidebar-link">
-                <div><i class="bi bi-globe link-icon"></i> Halaman Publik Mahasiswa</div>
+                <div class="sidebar-link-content">
+                    <div class="link-icon-box"><i class="bi bi-globe2"></i></div>
+                    <span>Halaman Publik</span>
+                </div>
                 <i class="bi bi-box-arrow-up-right small text-muted"></i>
             </a>
+
             <a href="{{ route('peminjaman.tracking') }}" target="_blank" class="sidebar-link">
-                <div><i class="bi bi-search link-icon"></i> Pelacakan Status Surat</div>
+                <div class="sidebar-link-content">
+                    <div class="link-icon-box"><i class="bi bi-search"></i></div>
+                    <span>Lacak Surat Peminjam</span>
+                </div>
                 <i class="bi bi-box-arrow-up-right small text-muted"></i>
             </a>
         </div>
 
-        <!-- Sidebar User Footer -->
+        <!-- Sidebar User Profile Footer -->
         <div class="sidebar-user">
             <div class="d-flex align-items-center justify-content-between">
-                <div class="d-flex align-items-center gap-2.5">
-                    <div class="rounded-circle bg-primary bg-opacity-20 text-primary border border-primary border-opacity-25 d-flex align-items-center justify-content-center fw-bold" style="width: 36px; height: 36px;">
-                        <i class="bi bi-person-fill"></i>
+                <div class="d-flex align-items-center gap-2.5 overflow-hidden">
+                    <div class="sidebar-avatar">
+                        {{ strtoupper(substr(Auth::user()->name ?? 'A', 0, 1)) }}
                     </div>
-                    <div>
-                        <div class="text-white small fw-bold text-truncate" style="max-width: 130px;">{{ Auth::user()->name }}</div>
-                        <div class="text-white-50" style="font-size: 0.72rem;"><span class="pulse-online me-1"></span> Laboran JTI</div>
+                    <div class="overflow-hidden">
+                        <div class="text-white small fw-bold text-truncate" style="max-width: 135px;" title="{{ Auth::user()->name }}">
+                            {{ Auth::user()->name }}
+                        </div>
+                        <div class="text-white-50 d-flex align-items-center gap-1" style="font-size: 0.7rem;">
+                            <span class="pulse-online" style="width:6px; height:6px;"></span>
+                            <span class="text-truncate">Laboran Admin</span>
+                        </div>
                     </div>
                 </div>
 
-                <form action="{{ route('logout') }}" method="POST">
+                <form action="{{ route('logout') }}" method="POST" class="m-0">
                     @csrf
-                    <button type="submit" class="btn btn-outline-danger btn-sm p-1.5 rounded-3" title="Keluar">
+                    <button type="submit" class="btn-sidebar-logout" title="Keluar / Logout">
                         <i class="bi bi-power"></i>
                     </button>
                 </form>
@@ -332,7 +561,7 @@
         <!-- Topbar Header -->
         <header class="admin-topbar">
             <div class="d-flex align-items-center gap-3">
-                <button class="btn btn-light d-lg-none p-1.5 rounded border" onclick="document.getElementById('adminSidebar').classList.toggle('show')">
+                <button class="btn btn-light d-lg-none p-1.5 rounded border" onclick="toggleSidebar()">
                     <i class="bi bi-list fs-5"></i>
                 </button>
                 <div>
@@ -364,7 +593,7 @@
         <!-- Flash Message Alerts -->
         <div class="container-fluid px-4 mt-3">
             @if(session('success'))
-                <div class="alert alert-success alert-dismissible fade show shadow-sm border-0 bg-success bg-opacity-10 text-success rounded-3 d-flex align-items-center" role="alert">
+                <div class="alert alert-success alert-dismissible fade show shadow-sm border-0 rounded-3 d-flex align-items-center" role="alert">
                     <i class="bi bi-check-circle-fill me-2 fs-5"></i>
                     <div>{{ session('success') }}</div>
                     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
@@ -372,7 +601,7 @@
             @endif
 
             @if(session('error'))
-                <div class="alert alert-danger alert-dismissible fade show shadow-sm border-0 bg-danger bg-opacity-10 text-danger rounded-3 d-flex align-items-center" role="alert">
+                <div class="alert alert-danger alert-dismissible fade show shadow-sm border-0 rounded-3 d-flex align-items-center" role="alert">
                     <i class="bi bi-exclamation-triangle-fill me-2 fs-5"></i>
                     <div>{{ session('error') }}</div>
                     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
@@ -394,6 +623,14 @@
 
     <!-- Bootstrap Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('adminSidebar');
+            const backdrop = document.getElementById('sidebarBackdrop');
+            if (sidebar) sidebar.classList.toggle('show');
+            if (backdrop) backdrop.classList.toggle('show');
+        }
+    </script>
     @stack('scripts')
 </body>
 </html>

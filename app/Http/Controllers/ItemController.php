@@ -10,9 +10,13 @@ class ItemController extends Controller
 {
     public function index(Request $request)
     {
-        // Hanya muat 3 kategori utama beserta relasi barang-barangnya
+        // Muat kategori beserta barang dan borrowing aktif (disetujui) untuk info lokasi
         $categories = Category::with(['items' => function ($query) {
-            $query->orderBy('nama_barang', 'asc');
+            $query->orderBy('nama_barang', 'asc')
+                  ->with(['borrowingDetails' => function ($q) {
+                      $q->whereHas('borrowing', fn($b) => $b->where('status', 'disetujui'))
+                        ->with(['borrowing' => fn($b) => $b->where('status', 'disetujui')]);
+                  }]);
         }])->get();
 
         return view('items.index', compact('categories'));

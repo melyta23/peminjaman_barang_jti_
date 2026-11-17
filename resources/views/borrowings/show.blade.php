@@ -81,23 +81,52 @@
                                 <h6 class="fw-bold text-dark border-bottom pb-2 mb-2">
                                     <i class="bi bi-person me-1"></i> Data Peminjam
                                 </h6>
-                                <table class="table table-sm table-borderless mb-0 small">
-                                    <tr>
-                                        <td class="text-muted" style="width: 120px;">Nama</td>
-                                        <td>: <strong>{{ $borrowing->nama_peminjam }}</strong></td>
-                                    </tr>
-                                    <tr>
-                                        <td class="text-muted">NIM / NIP</td>
-                                        <td>: {{ $borrowing->nim_nip }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="text-muted">Program Studi</td>
-                                        <td>: {{ $borrowing->prodi }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="text-muted">No. WhatsApp</td>
-                                        <td>: {{ $borrowing->no_hp }}</td>
-                                    </tr>
+                                <table class="table table-sm table-borderless mb-0 small" style="table-layout: fixed; width: 100%;">
+                                    <tbody>
+                                        <tr>
+                                            <td class="text-muted py-1" style="width: 130px; white-space: nowrap; vertical-align: top;">Nama</td>
+                                            <td class="text-muted py-1 px-0" style="width: 15px; text-align: center; vertical-align: top;">:</td>
+                                            <td class="py-1 text-dark" style="word-break: break-word; overflow-wrap: anywhere; vertical-align: top;">
+                                                <strong>{{ $borrowing->nama_peminjam }}</strong>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-muted py-1" style="white-space: nowrap; vertical-align: top;">NIM / NIP</td>
+                                            <td class="text-muted py-1 px-0" style="text-align: center; vertical-align: top;">:</td>
+                                            <td class="py-1 text-dark" style="word-break: break-word; overflow-wrap: anywhere; vertical-align: top;">
+                                                {{ $borrowing->nim_nip }}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-muted py-1" style="white-space: nowrap; vertical-align: top;">Program Studi</td>
+                                            <td class="text-muted py-1 px-0" style="text-align: center; vertical-align: top;">:</td>
+                                            <td class="py-1 text-dark" style="word-break: break-word; overflow-wrap: anywhere; vertical-align: top;">
+                                                {{ $borrowing->prodi }}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-muted py-1" style="white-space: nowrap; vertical-align: top;">No. WhatsApp</td>
+                                            <td class="text-muted py-1 px-0" style="text-align: center; vertical-align: top;">:</td>
+                                            <td class="py-1 text-dark" style="word-break: break-word; overflow-wrap: anywhere; vertical-align: top;">
+                                                @php
+                                                    $rawPhone = $borrowing->no_hp ?? '';
+                                                    $cleanPhone = preg_replace('/[^0-9]/', '', $rawPhone);
+                                                    if (str_starts_with($cleanPhone, '0')) {
+                                                        $cleanPhone = '62' . substr($cleanPhone, 1);
+                                                    } elseif (str_starts_with($cleanPhone, '8')) {
+                                                        $cleanPhone = '62' . $cleanPhone;
+                                                    }
+                                                @endphp
+                                                @if(!empty($cleanPhone) && strlen($cleanPhone) >= 9)
+                                                    <a href="whatsapp://send?phone={{ $cleanPhone }}" class="text-decoration-none text-success fw-semibold" title="Buka Chat di Aplikasi WhatsApp">
+                                                        <i class="bi bi-whatsapp me-1"></i>{{ $borrowing->no_hp }}
+                                                    </a>
+                                                @else
+                                                    <span>{{ $borrowing->no_hp ?? '-' }}</span>
+                                                @endif
+                                            </td>
+                                        </tr>
+                                    </tbody>
                                 </table>
                             </div>
                         </div>
@@ -107,19 +136,48 @@
                                 <h6 class="fw-bold text-dark border-bottom pb-2 mb-2">
                                     <i class="bi bi-calendar3 me-1"></i> Waktu & Keperluan
                                 </h6>
-                                <table class="table table-sm table-borderless mb-0 small">
-                                    <tr>
-                                        <td class="text-muted" style="width: 140px;">Tanggal Pinjam</td>
-                                        <td>: <strong>{{ $borrowing->tanggal_pinjam->translatedFormat('d F Y') }}</strong></td>
-                                    </tr>
-                                    <tr>
-                                        <td class="text-muted">Estimasi Kembali</td>
-                                        <td>: <strong class="text-danger">{{ $borrowing->tanggal_kembali->translatedFormat('d F Y') }}</strong></td>
-                                    </tr>
-                                    <tr>
-                                        <td class="text-muted">Keperluan</td>
-                                        <td>: {{ $borrowing->keperluan }}</td>
-                                    </tr>
+                                <table class="table table-sm table-borderless mb-0 small" style="table-layout: fixed; width: 100%;">
+                                    <tbody>
+                                        <tr>
+                                            <td class="text-muted py-1" style="width: 130px; white-space: nowrap; vertical-align: top;">Tanggal Pinjam</td>
+                                            <td class="text-muted py-1 px-0" style="width: 15px; text-align: center; vertical-align: top;">:</td>
+                                            <td class="py-1 text-dark" style="word-break: break-word; overflow-wrap: anywhere; vertical-align: top;">
+                                                <strong>{{ $borrowing->tanggal_pinjam->translatedFormat('d F Y') }}</strong>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-muted py-1" style="white-space: nowrap; vertical-align: top;">Jam / Waktu</td>
+                                            <td class="text-muted py-1 px-0" style="text-align: center; vertical-align: top;">:</td>
+                                            <td class="py-1 text-dark" style="word-break: break-word; overflow-wrap: anywhere; vertical-align: top;">
+                                                <strong>{{ $borrowing->rentang_waktu }}</strong>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-muted py-1" style="white-space: nowrap; vertical-align: top;">Estimasi Kembali</td>
+                                            <td class="text-muted py-1 px-0" style="text-align: center; vertical-align: top;">:</td>
+                                            <td class="py-1" style="word-break: break-word; overflow-wrap: anywhere; vertical-align: top;">
+                                                <strong class="text-danger">{{ $borrowing->tanggal_kembali->translatedFormat('d F Y') }}</strong>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-muted py-1" style="white-space: nowrap; vertical-align: top;">Keperluan</td>
+                                            <td class="text-muted py-1 px-0" style="text-align: center; vertical-align: top;">:</td>
+                                            <td class="py-1 text-dark" style="word-break: break-word; overflow-wrap: anywhere; vertical-align: top;">
+                                                {{ $borrowing->keperluan }}
+                                            </td>
+                                        </tr>
+                                        @if($borrowing->lokasi_penggunaan)
+                                        <tr>
+                                            <td class="text-muted py-1" style="white-space: nowrap; vertical-align: top;">
+                                                <i class="bi bi-geo-alt-fill text-danger me-1"></i>Lokasi Penggunaan
+                                            </td>
+                                            <td class="text-muted py-1 px-0" style="text-align: center; vertical-align: top;">:</td>
+                                            <td class="py-1 fw-semibold text-danger-emphasis" style="word-break: break-word; overflow-wrap: anywhere; vertical-align: top;">
+                                                {{ $borrowing->lokasi_penggunaan }}
+                                            </td>
+                                        </tr>
+                                        @endif
+                                    </tbody>
                                 </table>
                             </div>
                         </div>

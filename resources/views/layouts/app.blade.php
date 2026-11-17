@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Sistem Peminjaman Sarpras') — JTI Politeknik Negeri Jember</title>
+    <link rel="icon" type="image/png" href="{{ asset('images/logo-polije.png') }}">
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
@@ -14,10 +15,12 @@
 
     <style>
         :root {
+            --bs-primary: #3b6ea5;
+            --bs-primary-rgb: 59, 110, 165;
             --navy:   #0a1f44;
-            --blue:   #1a56db;
-            --accent: #2563eb;
-            --sky:    #0ea5e9;
+            --blue:   #3b6ea5;
+            --accent: #3b6ea5;
+            --sky:    #5a8ab8;
             --bg:     #f4f7fb;
             --border: #dde3ed;
             --text:   #1a202c;
@@ -85,12 +88,15 @@
             flex-shrink: 0;
         }
         .brand-icon {
-            width: 38px; height: 38px;
-            background: linear-gradient(135deg, var(--blue) 0%, var(--navy) 100%);
-            border-radius: 9px;
+            width: 40px; height: 40px;
             display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
         }
-        .brand-icon svg { display: block; }
+        .brand-icon img {
+            width: 40px; height: 40px;
+            object-fit: contain;
+            display: block;
+        }
         .brand-name {
             font-family: 'Plus Jakarta Sans', sans-serif;
             font-size: 1rem;
@@ -219,7 +225,36 @@
             border: none;
             transition: background 0.15s, transform 0.15s;
         }
-        .btn-accent:hover { background: #1d4ed8; color: #fff; transform: translateY(-1px); }
+        .btn-accent:hover { background: #2f5986; color: #fff; transform: translateY(-1px); }
+
+        /* Global Soft Blue Overrides for Bootstrap Primary */
+        .btn-primary {
+            background-color: var(--blue) !important;
+            border-color: var(--blue) !important;
+            color: #ffffff !important;
+        }
+        .btn-primary:hover, .btn-primary:focus, .btn-primary:active {
+            background-color: #2f5986 !important;
+            border-color: #2f5986 !important;
+            color: #ffffff !important;
+        }
+        .btn-outline-primary {
+            color: var(--blue) !important;
+            border-color: var(--blue) !important;
+        }
+        .btn-outline-primary:hover {
+            background-color: var(--blue) !important;
+            color: #ffffff !important;
+        }
+        .text-primary {
+            color: var(--blue) !important;
+        }
+        .bg-primary:not([class*="bg-opacity"]) {
+            background-color: var(--blue) !important;
+        }
+        .border-primary {
+            border-color: var(--blue) !important;
+        }
 
         .form-control, .form-select {
             border-radius: 8px;
@@ -229,7 +264,7 @@
         }
         .form-control:focus, .form-select:focus {
             border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(37,99,235,0.12);
+            box-shadow: 0 0 0 3px rgba(59,110,165,0.15);
         }
 
         .live-dot {
@@ -275,17 +310,11 @@
             <!-- Brand -->
             <a class="navbar-brand-wrap" href="{{ route('home') }}">
                 <div class="brand-icon">
-                    <svg viewBox="0 0 36 36" width="22" height="22" fill="none">
-                        <rect x="4" y="8" width="28" height="20" rx="4" fill="white" fill-opacity="0.2"/>
-                        <rect x="8" y="12" width="8" height="6" rx="1.5" fill="white"/>
-                        <rect x="20" y="12" width="8" height="2" rx="1" fill="white" fill-opacity="0.7"/>
-                        <rect x="20" y="16" width="5" height="2" rx="1" fill="white" fill-opacity="0.5"/>
-                        <circle cx="18" cy="26" r="2" fill="#facc15"/>
-                    </svg>
+                    <img src="{{ asset('images/logo-polije.png') }}" alt="Logo Politeknik Negeri Jember" width="40" height="40">
                 </div>
                 <div>
                     <div class="brand-name">SIPEMBAR JTI</div>
-                    <div class="brand-sub">Peminjaman Sarana Prasarana Lab</div>
+                    <div class="brand-sub">Politeknik Negeri Jember</div>
                 </div>
             </a>
 
@@ -310,12 +339,10 @@
 
             <!-- Actions -->
             <div class="navbar-actions ms-auto">
-                @auth
-                    @if(Auth::user()->isAdmin())
-                        <a class="btn-admin" href="{{ route('admin.dashboard') }}">
-                            <i class="bi bi-speedometer2"></i> Dashboard Admin
-                        </a>
-                    @endif
+                @if(Auth::check() && Auth::user()->isAdmin())
+                    <a class="btn-admin" href="{{ route('admin.dashboard') }}">
+                        <i class="bi bi-speedometer2"></i> Dashboard Admin
+                    </a>
                     <div class="dropdown">
                         <button class="user-dropdown-toggle" type="button" data-bs-toggle="dropdown">
                             <i class="bi bi-person-circle text-primary"></i>
@@ -323,7 +350,7 @@
                             <i class="bi bi-chevron-down small text-muted"></i>
                         </button>
                         <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2" style="min-width: 180px; border-radius: 10px; overflow: hidden;">
-                            <li><span class="dropdown-item-text small text-muted py-2">Role: <strong>{{ strtoupper(Auth::user()->role) }}</strong></span></li>
+                            <li><span class="dropdown-item-text small text-muted py-2">Petugas / Laboran</span></li>
                             <li><hr class="dropdown-divider my-0"></li>
                             <li>
                                 <form action="{{ route('logout') }}" method="POST">
@@ -339,7 +366,7 @@
                     <a class="btn-portal" href="{{ route('login') }}">
                         <i class="bi bi-shield-lock"></i> Portal Petugas
                     </a>
-                @endauth
+                @endif
             </div>
 
         </div>

@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Flowchart SIPEMBAR JTI – Politeknik Negeri Jember</title>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #f0f4f8;
+      color: #1e293b;
+      min-height: 100vh;
+    }
+
+    /* ── HEADER ── */
+    .header {
+      background: linear-gradient(135deg, #091322 0%, #0f2347 60%, #1d4ed8 100%);
+      color: white;
+      padding: 28px 40px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+      box-shadow: 0 4px 20px rgba(9,19,34,0.4);
+    }
+    .header-left h1 {
+      font-size: 1.55rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      line-height: 1.2;
+    }
+    .header-left p {
+      font-size: 0.88rem;
+      color: rgba(255,255,255,0.65);
+      margin-top: 4px;
+    }
+    .badge-sys {
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.22);
+      border-radius: 20px;
+      padding: 4px 14px;
+      font-size: 0.74rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      color: #93c5fd;
+      display: inline-block;
+      margin-bottom: 8px;
+    }
+    .btn-print {
+      background: #3b6ea5;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 10px 22px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: background 0.2s, transform 0.1s;
+      text-decoration: none;
+      box-shadow: 0 2px 10px rgba(59,110,165,0.4);
+    }
+    .btn-print:hover { background: #2c598a; transform: translateY(-1px); }
+    .btn-print:active { transform: translateY(0); }
+
+    /* ── LEGEND ── */
+    .legend-bar {
+      background: white;
+      border-bottom: 1px solid #e2e8f0;
+      padding: 12px 40px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      align-items: center;
+      font-size: 0.82rem;
+    }
+    .legend-bar strong { color: #475569; margin-right: 6px; }
+    .leg { display: flex; align-items: center; gap: 7px; }
+    .dot { width: 14px; height: 14px; border-radius: 50%; flex-shrink: 0; }
+    .dot-mhs    { background: #3b82f6; }
+    .dot-sys    { background: #8b5cf6; }
+    .dot-admin  { background: #f59e0b; }
+    .dot-ok     { background: #22c55e; }
+    .dot-err    { background: #ef4444; }
+
+    /* ── STEPS BAR ── */
+    .steps-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0;
+      background: white;
+      border-bottom: 1px solid #e2e8f0;
+      overflow-x: auto;
+    }
+    .step-item {
+      flex: 1;
+      min-width: 130px;
+      padding: 10px 16px;
+      text-align: center;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: #64748b;
+      border-right: 1px solid #f1f5f9;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+    .step-item:last-child { border-right: none; }
+    .step-num {
+      width: 24px; height: 24px;
+      border-radius: 50%;
+      font-size: 0.72rem;
+      font-weight: 800;
+      display: flex; align-items: center; justify-content: center;
+      color: white;
+    }
+    .s1 { background: #3b82f6; }
+    .s2 { background: #6366f1; }
+    .s3 { background: #8b5cf6; }
+    .s4 { background: #f59e0b; }
+    .s5 { background: #22c55e; }
+    .s6 { background: #ef4444; }
+    .s7 { background: #0ea5e9; }
+    .s8 { background: #14b8a6; }
+
+    /* ── MAIN CONTENT ── */
+    .main {
+      padding: 32px 40px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    /* ── SECTION CARD ── */
+    .section-card {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+      padding: 28px 32px;
+      margin-bottom: 28px;
+      border: 1px solid #e2e8f0;
+    }
+    .section-title {
+      font-size: 1rem;
+      font-weight: 800;
+      color: #0f172a;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .section-title .icon {
+      width: 32px; height: 32px;
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem;
+    }
+    .section-desc {
+      font-size: 0.82rem;
+      color: #64748b;
+      margin-bottom: 20px;
+      padding-left: 42px;
+    }
+
+    /* ── MERMAID ── */
+    .mermaid {
+      text-align: center;
+      overflow-x: auto;
+      padding: 8px 0;
+    }
+    .mermaid svg {
+      max-width: 100%;
+      height: auto;
+    }
+
+    /* ── STATUS TABLE ── */
+    .status-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      font-size: 0.84rem;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid #e2e8f0;
+    }
+    .status-table th {
+      background: #f8fafc;
+      padding: 12px 16px;
+      text-align: left;
+      font-weight: 700;
+      color: #374151;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    .status-table td {
+      padding: 11px 16px;
+      border-bottom: 1px solid #f1f5f9;
+      vertical-align: top;
+      color: #374151;
+    }
+    .status-table tr:last-child td { border-bottom: none; }
+    .status-table tr:hover td { background: #f8fafc; }
+    .pill {
+      display: inline-block;
+      padding: 3px 12px;
+      border-radius: 20px;
+      font-size: 0.74rem;
+      font-weight: 700;
+    }
+    .pill-menunggu   { background: #fef9c3; color: #854d0e; border: 1px solid #fde047; }
+    .pill-disetujui  { background: #dcfce7; color: #166534; border: 1px solid #86efac; }
+    .pill-ditolak    { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
+    .pill-selesai    { background: #dbeafe; color: #1e40af; border: 1px solid #93c5fd; }
+
+    /* ── ACTOR BOXES ── */
+    .actor-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .actor-box {
+      border-radius: 12px;
+      padding: 16px 18px;
+      border-left: 4px solid;
+    }
+    .actor-box h4 { font-size: 0.88rem; font-weight: 800; margin-bottom: 6px; }
+    .actor-box ul { list-style: none; padding: 0; }
+    .actor-box ul li { font-size: 0.78rem; color: #475569; padding: 2px 0; }
+    .actor-box ul li::before { content: "→ "; color: #94a3b8; font-weight: 700; }
+    .box-mhs   { background: #eff6ff; border-color: #3b82f6; }
+    .box-mhs h4 { color: #1d4ed8; }
+    .box-admin { background: #fffbeb; border-color: #f59e0b; }
+    .box-admin h4 { color: #d97706; }
+    .box-sys   { background: #f5f3ff; border-color: #8b5cf6; }
+    .box-sys h4 { color: #7c3aed; }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center;
+      padding: 24px;
+      font-size: 0.78rem;
+      color: #94a3b8;
+      border-top: 1px solid #e2e8f0;
+      background: white;
+      margin-top: 20px;
+    }
+
+    /* ── PRINT ── */
+    @media print {
+      body { background: white; }
+      .header { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .btn-print, .steps-bar { display: none; }
+      .main { padding: 16px; max-width: 100%; }
+      .section-card { break-inside: avoid; box-shadow: none; }
+      .mermaid svg { max-width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════ HEADER ═══════════ -->
+<div class="header">
+  <div class="header-left">
+    <div class="badge-sys">🏛 POLITEKNIK NEGERI JEMBER — LAB JTI</div>
+    <h1>Flowchart Alur Sistem SIPEMBAR JTI</h1>
+    <p>Sistem Informasi Peminjaman Sarana &amp; Prasarana Laboratorium — Laravel 12</p>
+  </div>
+  <button class="btn-print" onclick="window.print()">
+    🖨️ &nbsp;Simpan / Cetak PDF
+  </button>
+</div>
+
+<!-- ═══════════ LEGEND ═══════════ -->
+<div class="legend-bar">
+  <strong>Aktor:</strong>
+  <div class="leg"><div class="dot dot-mhs"></div> Mahasiswa</div>
+  <div class="leg"><div class="dot dot-admin"></div> Admin / Laboran JTI</div>
+  <div class="leg"><div class="dot dot-sys"></div> Sistem (Database)</div>
+  <div class="leg"><div class="dot dot-ok"></div> Alur Berhasil</div>
+  <div class="leg"><div class="dot dot-err"></div> Alur Ditolak / Gagal</div>
+</div>
+
+<!-- ═══════════ STEPS BAR ═══════════ -->
+<div class="steps-bar">
+  <div class="step-item"><div class="step-num s1">1</div>Registrasi &amp; Login</div>
+  <div class="step-item"><div class="step-num s2">2</div>Lihat Katalog</div>
+  <div class="step-item"><div class="step-num s3">3</div>Ajukan Peminjaman</div>
+  <div class="step-item"><div class="step-num s4">4</div>Review Admin</div>
+  <div class="step-item"><div class="step-num s5">5</div>Disetujui</div>
+  <div class="step-item"><div class="step-num s6">6</div>Ditolak</div>
+  <div class="step-item"><div class="step-num s7">7</div>Penyerahan &amp; Pakai</div>
+  <div class="step-item"><div class="step-num s8">8</div>Pengembalian &amp; Selesai</div>
+</div>
+
+<!-- ═══════════ MAIN ═══════════ -->
+<div class="main">
+
+  <!-- ── RINGKASAN AKTOR ── -->
+  <div class="section-card">
+    <div class="section-title">
+      <div class="icon" style="background:#eff6ff;">👥</div>
+      Peran & Tanggung Jawab Setiap Aktor
+    </div>
+    <div class="section-desc">Tiga aktor utama yang terlibat dalam sistem SIPEMBAR JTI beserta aktivitasnya.</div>
+    <div class="actor-row">
+      <div class="actor-box box-mhs">
+        <h4>🎓 Mahasiswa</h4>
+        <ul>
+          <li>Registrasi akun baru</li>
+          <li>Login ke sistem</li>
+          <li>Melihat katalog sarpras lab</li>
+          <li>Mengisi &amp; mengajukan form peminjaman</li>
+          <li>Memantau status permohonan</li>
+          <li>Menerima &amp; menggunakan barang</li>
+          <li>Mengembalikan barang tepat waktu</li>
+          <li>Mencetak surat peminjaman</li>
+        </ul>
+      </div>
+      <div class="actor-box box-admin">
+        <h4>🛡 Admin / Laboran JTI</h4>
+        <ul>
+          <li>Memantau dashboard real-time</li>
+          <li>Menerima notifikasi permohonan baru</li>
+          <li>Memeriksa &amp; memverifikasi data peminjam</li>
+          <li>Menyetujui atau menolak permohonan</li>
+          <li>Menyerahkan barang yang disetujui</li>
+          <li>Menambah catatan admin</li>
+          <li>Memeriksa kondisi barang saat dikembalikan</li>
+          <li>Menandai peminjaman sebagai Selesai</li>
+          <li>Mengelola inventaris sarpras</li>
+        </ul>
+      </div>
+      <div class="actor-box box-sys">
+        <h4>⚙️ Sistem / Database</h4>
+        <ul>
+          <li>Validasi form &amp; autentikasi</li>
+          <li>Generate kode transaksi unik (JTI-XXXXXX-YYYY)</li>
+          <li>Menyimpan permohonan ke database</li>
+          <li>Update stok_tersedia saat disetujui</li>
+          <li>Restore stok saat selesai / ditolak</li>
+          <li>Validasi ketersediaan stok real-time</li>
+          <li>Menampilkan status &amp; riwayat peminjaman</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── FLOWCHART UTAMA ── -->
+  <div class="section-card">
+    <div class="section-title">
+      <div class="icon" style="background:#f0fdf4;">📊</div>
+      Flowchart Lengkap Alur Sistem SIPEMBAR JTI
+    </div>
+    <div class="section-desc">Diagram alur menyeluruh dari awal registrasi hingga pengembalian barang, mencakup semua skenario persetujuan dan penolakan.</div>
+
+    <div class="mermaid">
+flowchart TD
+    A([🚀 MULAI]) --> B{Sudah Punya\nAkun?}
+
+    B -->|Belum| C[📝 Registrasi Akun\nNama · Email · Password]
+    B -->|Sudah| D
+
+    C --> C1{Validasi\nData Registrasi}
+    C1 -->|❌ Gagal| C2[⚠️ Tampilkan Error\nValidasi]
+    C2 --> C
+    C1 -->|✅ Valid| C3[(💾 Simpan User\nke Database)]
+    C3 --> D
+
+    D[🔐 Halaman Login\nEmail + Password] --> E{Autentikasi\nLaravel Auth}
+    E -->|❌ Gagal| E1[⚠️ Error:\nEmail/Password Salah]
+    E1 --> D
+    E -->|✅ Berhasil| F{Cek Role\nUser}
+
+    F -->|admin| ADMIN([🛡 Dashboard\nAdmin])
+    F -->|mahasiswa| G
+
+    %% ── ALUR MAHASISWA ──
+    subgraph MHS [" 🎓  ALUR MAHASISWA "]
+        G[🏠 Halaman Home\nKatalog Sarpras Lab]
+        G --> G1[🔍 Lihat Inventaris\nper Kategori Lab]
+        G1 --> G2{Barang\nTersedia?}
+        G2 -->|Stok = 0| G3[🚫 Barang Tidak\nTersedia]
+        G3 --> G1
+        G2 -->|Stok > 0| H[📋 Form Peminjaman\nStep 1: Data Diri]
+
+        H --> H1[👤 Isi Data Peminjam\nNama · NIM · Prodi · No. HP · Email]
+        H1 --> H2[📋 Step 2: Pilih Barang\n+ Jumlah + Keperluan]
+        H2 --> H3[📅 Step 3: Tanggal &amp; Waktu\nTgl Pinjam · Tgl Kembali · Jam]
+        H3 --> H4{Validasi\nForm}
+        H4 -->|❌ Error| H5[⚠️ Tampilkan Pesan\nValidasi]
+        H5 --> H1
+        H4 -->|✅ Valid| I
+
+        I[(⚙️ Sistem Generate\nKode Transaksi\nJTI-XXXXXX-YYYY)]
+        I --> I1[(💾 Simpan ke DB\nStatus: MENUNGGU)]
+        I1 --> J[✅ Halaman Sukses\n+Kode Transaksi]
+
+        J --> K[📊 Riwayat Peminjaman\nMahasiswa]
+        K --> K1{Status\nPermohonan?}
+        K1 -->|MENUNGGU| K2[⏳ Menunggu\nVerifikasi Admin]
+        K1 -->|DITOLAK| K3[❌ Permohonan\nDitolak Admin]
+        K1 -->|DISETUJUI| K4[✅ Ambil Barang\ndi Lab JTI]
+        K1 -->|SELESAI| K5[🏁 Peminjaman\nSelesai]
+
+        K4 --> K4a[🖨️ Cetak Surat\nPeminjaman Polije]
+    end
+
+    %% ── ALUR ADMIN ──
+    subgraph ADM [" 🛡  ALUR ADMIN / LABORAN JTI "]
+        ADMIN --> L[📊 Dashboard\nLihat Statistik Real-time]
+        L --> L1[🔔 Notifikasi Badge\nPermohonan MENUNGGU]
+        L1 --> L2[📋 Data Peminjaman\nTabel Semua Permohonan]
+        L2 --> L3[🔎 Buka Detail\nPermohonan Masuk]
+        L3 --> L4[📄 Halaman Verifikasi\nCek Data Peminjam &amp; Barang]
+
+        L4 --> M{Keputusan\nAdmin}
+
+        M -->|✅ SETUJUI| N{Cek Stok\nReal-time}
+        N -->|Stok Cukup| N1[(💾 Status → DISETUJUI\nstok_tersedia - jumlah)]
+        N -->|Stok Kurang| N2[⚠️ Error: Stok Tidak\nCukup, Tidak Bisa Disetujui]
+        N2 --> L4
+
+        M -->|❌ TOLAK| O1[(💾 Status → DITOLAK\nstok tetap tidak berubah)]
+
+        M -->|📝 Tambah Catatan| O2[✍️ Isi Catatan Admin\nUntuk Mahasiswa]
+        O2 --> M
+
+        N1 --> P[📦 Proses Penyerahan\nBarang ke Mahasiswa]
+        P --> P1[🤝 Mahasiswa Mengambil\nBarang di Lab]
+        P1 --> P2[⏱️ Masa Peminjaman\nBerjalan]
+        P2 --> P3[📦 Mahasiswa Mengembalikan\nBarang]
+        P3 --> P4[🔍 Admin Cek Kondisi\nFisik Barang]
+        P4 --> P5[(💾 Status → SELESAI\nstok_tersedia + jumlah)]
+        P5 --> L
+
+        O1 --> L
+    end
+
+    %% ── KONEKSI ANTAR ALUR ──
+    I1 -.->|Muncul di Dashboard Admin| L1
+    N1 -.->|Status Update| K1
+    O1 -.->|Status Update| K1
+    P5 -.->|Status Update| K1
+
+    %% ── STYLING NODE ──
+    style A fill:#1d4ed8,color:#fff,stroke:#1d4ed8
+    style B fill:#fef9c3,stroke:#ca8a04,color:#1e293b
+    style C fill:#dbeafe,stroke:#3b82f6,color:#1e293b
+    style C1 fill:#fef9c3,stroke:#ca8a04,color:#1e293b
+    style C2 fill:#fee2e2,stroke:#ef4444,color:#1e293b
+    style C3 fill:#f0fdf4,stroke:#22c55e,color:#1e293b
+    style D fill:#dbeafe,stroke:#3b82f6,color:#1e293b
+    style E fill:#fef9c3,stroke:#ca8a04,color:#1e293b
+    style E1 fill:#fee2e2,stroke:#ef4444,color:#1e293b
+    style F fill:#fef9c3,stroke:#ca8a04,color:#1e293b
+    style ADMIN fill:#fef3c7,stroke:#f59e0b,color:#1e293b
+
+    style G fill:#eff6ff,stroke:#3b82f6,color:#1e293b
+    style G1 fill:#eff6ff,stroke:#3b82f6,color:#1e293b
+    style G2 fill:#fef9c3,stroke:#ca8a04,color:#1e293b
+    style G3 fill:#fee2e2,stroke:#ef4444,color:#1e293b
+    style H fill:#eff6ff,stroke:#3b82f6,color:#1e293b
+    style H1 fill:#eff6ff,stroke:#3b82f6,color:#1e293b
+    style H2 fill:#eff6ff,stroke:#3b82f6,color:#1e293b
+    style H3 fill:#eff6ff,stroke:#3b82f6,color:#1e293b
+    style H4 fill:#fef9c3,stroke:#ca8a04,color:#1e293b
+    style H5 fill:#fee2e2,stroke:#ef4444,color:#1e293b
+    style I fill:#f5f3ff,stroke:#8b5cf6,color:#1e293b
+    style I1 fill:#f5f3ff,stroke:#8b5cf6,color:#1e293b
+    style J fill:#dcfce7,stroke:#22c55e,color:#1e293b
+    style K fill:#eff6ff,stroke:#3b82f6,color:#1e293b
+    style K1 fill:#fef9c3,stroke:#ca8a04,color:#1e293b
+    style K2 fill:#fef9c3,stroke:#ca8a04,color:#1e293b
+    style K3 fill:#fee2e2,stroke:#ef4444,color:#1e293b
+    style K4 fill:#dcfce7,stroke:#22c55e,color:#1e293b
+    style K4a fill:#dbeafe,stroke:#3b82f6,color:#1e293b
+    style K5 fill:#dbeafe,stroke:#1d4ed8,color:#1e293b
+
+    style L fill:#fffbeb,stroke:#f59e0b,color:#1e293b
+    style L1 fill:#fef3c7,stroke:#f59e0b,color:#1e293b
+    style L2 fill:#fffbeb,stroke:#f59e0b,color:#1e293b
+    style L3 fill:#fffbeb,stroke:#f59e0b,color:#1e293b
+    style L4 fill:#fffbeb,stroke:#f59e0b,color:#1e293b
+    style M fill:#fef9c3,stroke:#ca8a04,color:#1e293b
+    style N fill:#fef9c3,stroke:#ca8a04,color:#1e293b
+    style N1 fill:#dcfce7,stroke:#22c55e,color:#1e293b
+    style N2 fill:#fee2e2,stroke:#ef4444,color:#1e293b
+    style O1 fill:#fee2e2,stroke:#ef4444,color:#1e293b
+    style O2 fill:#fffbeb,stroke:#f59e0b,color:#1e293b
+    style P fill:#fffbeb,stroke:#f59e0b,color:#1e293b
+    style P1 fill:#fffbeb,stroke:#f59e0b,color:#1e293b
+    style P2 fill:#fef9c3,stroke:#ca8a04,color:#1e293b
+    style P3 fill:#fffbeb,stroke:#f59e0b,color:#1e293b
+    style P4 fill:#fffbeb,stroke:#f59e0b,color:#1e293b
+    style P5 fill:#dcfce7,stroke:#22c55e,color:#1e293b
+
+    style MHS fill:#eff6ff,stroke:#3b82f6,color:#1e293b
+    style ADM fill:#fffbeb,stroke:#f59e0b,color:#1e293b
+    </div>
+  </div>
+
+  <!-- ── TABEL STATUS ── -->
+  <div class="section-card">
+    <div class="section-title">
+      <div class="icon" style="background:#fef9c3;">🏷️</div>
+      Referensi Status Peminjaman
+    </div>
+    <div class="section-desc">Empat status yang berlaku dalam sistem beserta aksi yang diperlukan dan efek pada stok inventaris.</div>
+
+    <table class="status-table">
+      <thead>
+        <tr>
+          <th>Status</th>
+          <th>Ditetapkan Oleh</th>
+          <th>Kondisi / Trigger</th>
+          <th>Efek pada Stok</th>
+          <th>Aksi Selanjutnya</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="pill pill-menunggu">⏳ MENUNGGU</span></td>
+          <td>Sistem (otomatis)</td>
+          <td>Mahasiswa submit form peminjaman</td>
+          <td>Tidak berubah — stok belum dikurangi</td>
+          <td>Admin review &amp; buat keputusan</td>
+        </tr>
+        <tr>
+          <td><span class="pill pill-disetujui">✅ DISETUJUI</span></td>
+          <td>Admin / Laboran JTI</td>
+          <td>Admin klik "Setujui" &amp; stok mencukupi</td>
+          <td><strong>stok_tersedia − jumlah</strong> (barang keluar)</td>
+          <td>Admin serahkan barang → Mahasiswa gunakan → Kembalikan → Admin selesaikan</td>
+        </tr>
+        <tr>
+          <td><span class="pill pill-ditolak">❌ DITOLAK</span></td>
+          <td>Admin / Laboran JTI</td>
+          <td>Admin klik "Tolak" (barang rusak/jadwal bentrok/dll)</td>
+          <td>Tidak berubah (atau dikembalikan jika dari Disetujui)</td>
+          <td>Mahasiswa dapat notifikasi &amp; catatan alasan penolakan</td>
+        </tr>
+        <tr>
+          <td><span class="pill pill-selesai">🏁 SELESAI</span></td>
+          <td>Admin / Laboran JTI</td>
+          <td>Admin klik "Selesai" setelah barang dikembalikan &amp; dicek</td>
+          <td><strong>stok_tersedia + jumlah</strong> (barang masuk kembali)</td>
+          <td>Peminjaman selesai — tercatat di riwayat</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ── ALUR STOK ── -->
+  <div class="section-card">
+    <div class="section-title">
+      <div class="icon" style="background:#f0fdf4;">📦</div>
+      Diagram Alur Perubahan Status &amp; Stok Barang
+    </div>
+    <div class="section-desc">Menunjukkan bagaimana status peminjaman berubah dan kapan stok_tersedia dikurangi atau ditambahkan kembali oleh sistem.</div>
+
+    <div class="mermaid">
+flowchart LR
+    M([⏳ MENUNGGU])
+    D([✅ DISETUJUI])
+    T([❌ DITOLAK])
+    S([🏁 SELESAI])
+
+    M -->|Admin Setujui\n✔ Stok cukup\n⬇ stok_tersedia - jumlah| D
+    M -->|Admin Tolak\n━ Stok tidak berubah| T
+    D -->|Admin Selesaikan\nBarang dikembalikan\n⬆ stok_tersedia + jumlah| S
+    D -->|Admin Batalkan\n⬆ stok_tersedia + jumlah| M
+    D -->|Admin Tolak\n⬆ stok_tersedia + jumlah| T
+
+    style M fill:#fef9c3,stroke:#ca8a04,color:#1e293b,rx:20
+    style D fill:#dcfce7,stroke:#22c55e,color:#1e293b,rx:20
+    style T fill:#fee2e2,stroke:#ef4444,color:#1e293b,rx:20
+    style S fill:#dbeafe,stroke:#1d4ed8,color:#1e293b,rx:20
+    </div>
+  </div>
+
+  <!-- ── URL ROUTES ── -->
+  <div class="section-card">
+    <div class="section-title">
+      <div class="icon" style="background:#f5f3ff;">🔗</div>
+      Peta Halaman &amp; Route Sistem
+    </div>
+    <div class="section-desc">Daftar URL utama yang tersedia dalam aplikasi SIPEMBAR JTI beserta aksesnya.</div>
+
+    <table class="status-table">
+      <thead>
+        <tr>
+          <th>Halaman</th>
+          <th>URL / Route</th>
+          <th>Akses</th>
+          <th>Fungsi</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>🏠 Beranda / Katalog</td><td><code>/</code></td><td>Publik</td><td>Lihat katalog barang, info lab JTI</td></tr>
+        <tr><td>🔐 Login</td><td><code>/login</code></td><td>Guest</td><td>Autentikasi pengguna</td></tr>
+        <tr><td>📝 Registrasi</td><td><code>/register</code></td><td>Guest</td><td>Daftar akun baru mahasiswa</td></tr>
+        <tr><td>📋 Form Peminjaman</td><td><code>/peminjaman/create</code></td><td>Mahasiswa (Login)</td><td>Ajukan permohonan peminjaman baru</td></tr>
+        <tr><td>📊 Riwayat Mahasiswa</td><td><code>/peminjaman</code></td><td>Mahasiswa (Login)</td><td>Lihat status semua permohonan</td></tr>
+        <tr><td>🖨️ Cetak Surat</td><td><code>/peminjaman/{id}/surat</code></td><td>Mahasiswa (Login)</td><td>Print surat peminjaman format Polije</td></tr>
+        <tr><td>📊 Dashboard Admin</td><td><code>/admin/dashboard</code></td><td>Admin only</td><td>Statistik real-time, permohonan terbaru</td></tr>
+        <tr><td>📋 Data Peminjaman</td><td><code>/admin/peminjaman</code></td><td>Admin only</td><td>Tabel semua permohonan + filter + search</td></tr>
+        <tr><td>🔍 Detail Peminjaman</td><td><code>/admin/peminjaman/{id}</code></td><td>Admin only</td><td>Verifikasi, ubah status, tambah catatan</td></tr>
+        <tr><td>📦 Inventaris Admin</td><td><code>/admin/items</code></td><td>Admin only</td><td>Kelola daftar sarpras semua lab</td></tr>
+        <tr><td>➕ Tambah Barang</td><td><code>/admin/items/create</code></td><td>Admin only</td><td>Tambah sarpras baru ke inventaris</td></tr>
+        <tr><td>✏️ Edit Barang</td><td><code>/admin/items/{id}/edit</code></td><td>Admin only</td><td>Edit data &amp; stok sarpras</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+<!-- ═══════════ FOOTER ═══════════ -->
+<footer>
+  <strong>SIPEMBAR JTI</strong> — Sistem Informasi Peminjaman Sarana &amp; Prasarana Laboratorium &nbsp;|&nbsp;
+  Jurusan Teknologi Informasi · Politeknik Negeri Jember &nbsp;|&nbsp;
+  Dibuat dengan Laravel 12 &nbsp;·&nbsp; PHP 8.2 &nbsp;·&nbsp; Bootstrap 5
+</footer>
+
+<script>
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: 'base',
+    themeVariables: {
+      primaryColor: '#3b6ea5',
+      primaryTextColor: '#1e293b',
+      primaryBorderColor: '#3b6ea5',
+      lineColor: '#64748b',
+      secondaryColor: '#eff6ff',
+      tertiaryColor: '#fffbeb',
+      fontFamily: 'Segoe UI, Arial, sans-serif',
+      fontSize: '13px',
+      edgeLabelBackground: '#f8fafc',
+    },
+    flowchart: {
+      curve: 'basis',
+      padding: 20,
+      nodeSpacing: 40,
+      rankSpacing: 55,
+      useMaxWidth: true,
+    }
+  });
+</script>
+</body>
+</html>

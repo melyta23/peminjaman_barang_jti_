@@ -9,6 +9,7 @@ use App\Models\Item;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 
 class BorrowingController extends Controller
@@ -36,7 +37,9 @@ class BorrowingController extends Controller
 
     public function create()
     {
-        $categories = Category::all();
+        $categories = Category::with(['items' => function ($query) {
+            $query->orderBy('nama_barang', 'asc');
+        }])->get();
         $user = Auth::user();
 
         return view('borrowings.create', compact('categories', 'user'));
@@ -52,27 +55,47 @@ class BorrowingController extends Controller
             'email' => 'nullable|email|max:100',
             'tanggal_pinjam' => 'required|date|after_or_equal:today',
             'tanggal_kembali' => 'required|date|after_or_equal:tanggal_pinjam',
+            'jam_mulai' => 'nullable|string|max:20',
+            'jam_selesai' => 'nullable|string|max:20',
+            'sampai_selesai' => 'nullable',
             'keperluan' => 'required|string|min:10',
-            'category_id' => 'required|exists:categories,id',
+            'lokasi_penggunaan' => 'nullable|string|max:255',
+            'category_id' => 'nullable',
             'item_id' => 'required|array|min:1',
             'item_id.*' => 'required|exists:items,id',
             'jumlah' => 'required|array|min:1',
             'jumlah.*' => 'required|integer|min:1',
         ], [
-            'item_id.required' => 'Pilih minimal satu barang yang akan dipinjam.',
+            'item_id.required' => 'Pilih minimal satu sarana prasarana yang akan dipinjam.',
+            'item_id.min' => 'Pilih minimal satu sarana prasarana yang akan dipinjam.',
             'tanggal_pinjam.after_or_equal' => 'Tanggal pinjam minimal hari ini.',
             'tanggal_kembali.after_or_equal' => 'Tanggal kembali harus sama atau setelah tanggal pinjam.',
             'keperluan.min' => 'Jelaskan keperluan peminjaman minimal 10 karakter.',
         ]);
 
-        // Cek ketersediaan stok
+        // Gabungkan jika ada barang yang sama dipilih lebih dari 1 kali
+        $aggregatedItems = [];
         foreach ($request->item_id as $index => $itemId) {
-            $item = Item::findOrFail($itemId);
-            $qty = $request->jumlah[$index] ?? 1;
+            if (!$itemId) continue;
+            $qty = (int) ($request->jumlah[$index] ?? 1);
+            if ($qty < 1) $qty = 1;
 
-            if ($item->stok_tersedia < $qty) {
+            if (!isset($aggregatedItems[$itemId])) {
+                $aggregatedItems[$itemId] = 0;
+            }
+            $aggregatedItems[$itemId] += $qty;
+        }
+
+        if (empty($aggregatedItems)) {
+            return back()->withInput()->withErrors(['item_id' => 'Pilih minimal satu sarana prasarana yang akan dipinjam.']);
+        }
+
+        // Cek ketersediaan stok
+        foreach ($aggregatedItems as $itemId => $totalQty) {
+            $item = Item::findOrFail($itemId);
+            if ($item->stok_tersedia < $totalQty) {
                 return back()->withInput()->withErrors([
-                    'item_id' => "Stok barang '{$item->nama_barang}' tidak mencukupi (Tersedia: {$item->stok_tersedia}, Diminta: {$qty}).",
+                    'item_id' => "Stok sarana prasarana '{$item->nama_barang}' tidak mencukupi (Tersedia: {$item->stok_tersedia}, Diminta: {$totalQty}).",
                 ]);
             }
         }
@@ -82,22 +105,39 @@ class BorrowingController extends Controller
             // Generate Kode Transaksi unik: JTI-YYMM-RAND
             $kodeTransaksi = 'JTI-' . date('Ym') . '-' . strtoupper(Str::random(5));
 
-            $borrowing = Borrowing::create([
+            $borrowingData = [
                 'kode_transaksi' => $kodeTransaksi,
                 'user_id' => Auth::id(),
                 'nama_peminjam' => $validated['nama_peminjam'],
                 'nim_nip' => $validated['nim_nip'],
                 'prodi' => $validated['prodi'],
                 'no_hp' => $validated['no_hp'],
-                'email' => $validated['email'] ?? (Auth::user()?->email),
+                'email' => Auth::user()?->email,
                 'tanggal_pinjam' => $validated['tanggal_pinjam'],
                 'tanggal_kembali' => $validated['tanggal_kembali'],
                 'keperluan' => $validated['keperluan'],
                 'status' => 'menunggu',
-            ]);
+            ];
 
-            foreach ($request->item_id as $index => $itemId) {
-                $qty = $request->jumlah[$index] ?? 1;
+            if (Schema::hasColumn('borrowings', 'lokasi_penggunaan')) {
+                $borrowingData['lokasi_penggunaan'] = $validated['lokasi_penggunaan'] ?? null;
+            }
+
+            $jamMulai = $request->input('jam_mulai', '07:00');
+            $jamSelesai = ($request->filled('sampai_selesai') || empty($request->input('jam_selesai')) || strtolower(trim((string)$request->input('jam_selesai'))) === 'selesai')
+                ? 'selesai'
+                : $request->input('jam_selesai');
+
+            if (Schema::hasColumn('borrowings', 'jam_mulai')) {
+                $borrowingData['jam_mulai'] = $jamMulai;
+            }
+            if (Schema::hasColumn('borrowings', 'jam_selesai')) {
+                $borrowingData['jam_selesai'] = $jamSelesai;
+            }
+
+            $borrowing = Borrowing::create($borrowingData);
+
+            foreach ($aggregatedItems as $itemId => $qty) {
                 BorrowingDetail::create([
                     'borrowing_id' => $borrowing->id,
                     'item_id' => $itemId,

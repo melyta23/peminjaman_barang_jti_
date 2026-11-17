@@ -1,9 +1,10 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
-@section('title', 'Edit Barang ' . $item->kode_barang)
+@section('title', 'Edit Sarpras ' . $item->kode_barang . ' - Admin SIPEMBAR JTI')
+@section('page_title', 'Edit Sarana Prasarana')
 
 @section('content')
-<div class="container">
+<div class="pb-3">
     <div class="row justify-content-center">
         <div class="col-lg-8">
             <div class="d-flex justify-content-between align-items-center mb-3">

@@ -12,8 +12,10 @@ class ItemController extends Controller
     public function index(Request $request)
     {
         $categories = Category::all();
-        $query = Item::with('category')->latest();
-
+        $query = Item::with(['category', 'borrowingDetails' => function ($q) {
+            $q->whereHas('borrowing', fn($b) => $b->where('status', 'disetujui'))
+              ->with(['borrowing' => fn($b) => $b->where('status', 'disetujui')]);
+        }])->latest();
         if ($request->filled('category_id')) {
             $query->where('category_id', $request->category_id);
         }

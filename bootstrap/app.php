@@ -16,5 +16,10 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
-        //
+        $exceptions->render(function (\Illuminate\Session\TokenMismatchException $e, $request) {
+            if ($request->is('login')) {
+                return redirect()->route('login')->with('error', 'Sesi Anda telah kedaluwarsa (419). Halaman telah diperbarui dengan sesi baru, silakan masuk kembali.');
+            }
+            return redirect()->back()->withInput($request->except('password', '_token'))->with('error', 'Sesi halaman Anda telah kedaluwarsa (419). Silakan coba kirim kembali formulir.');
+        });
     })->create();

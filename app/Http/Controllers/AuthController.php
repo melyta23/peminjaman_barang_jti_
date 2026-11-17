@@ -11,11 +11,8 @@ class AuthController extends Controller
 {
     public function showLogin()
     {
-        if (Auth::check()) {
-            if (Auth::user()->isAdmin()) {
-                return redirect()->route('admin.dashboard');
-            }
-            return redirect()->route('peminjaman.index');
+        if (Auth::check() && Auth::user()->isAdmin()) {
+            return redirect()->route('admin.dashboard');
         }
         return view('auth.login');
     }
@@ -31,10 +28,12 @@ class AuthController extends Controller
             $request->session()->regenerate();
 
             if (Auth::user()->isAdmin()) {
-                return redirect()->intended(route('admin.dashboard'))->with('success', 'Selamat datang kembali, Admin!');
+                return redirect()->intended(route('admin.dashboard'))->with('success', 'Selamat datang kembali, Petugas Lab!');
             }
 
-            return redirect()->intended(route('peminjaman.index'))->with('success', 'Berhasil masuk.');
+            // Mahasiswa / peminjam umum tidak memerlukan sesi login
+            Auth::logout();
+            return redirect()->route('home')->with('info', 'Mahasiswa / Peminjam tidak perlu login. Anda dapat langsung melihat katalog dan mengajukan peminjaman.');
         }
 
         return back()->withErrors([

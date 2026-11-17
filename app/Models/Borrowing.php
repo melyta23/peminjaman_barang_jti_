@@ -20,7 +20,10 @@ class Borrowing extends Model
         'tanggal_pinjam',
         'tanggal_kembali',
         'tanggal_pengembalian_aktual',
+        'jam_mulai',
+        'jam_selesai',
         'keperluan',
+        'lokasi_penggunaan',
         'status',
         'catatan_admin',
     ];
@@ -61,6 +64,29 @@ class Borrowing extends Model
             'selesai' => 'Sudah Dikembalikan',
             default => ucfirst($this->status),
         };
+    }
+
+    public function getRentangWaktuAttribute(): string
+    {
+        $mulai = '07.00';
+        if (!empty($this->jam_mulai)) {
+            try {
+                $mulai = \Carbon\Carbon::parse($this->jam_mulai)->format('H.i');
+            } catch (\Throwable $e) {
+                $mulai = (string) $this->jam_mulai;
+            }
+        }
+
+        if (empty($this->jam_selesai) || strtolower(trim((string) $this->jam_selesai)) === 'selesai') {
+            return "{$mulai} WIB – Selesai";
+        }
+
+        try {
+            $selesai = \Carbon\Carbon::parse($this->jam_selesai)->format('H.i');
+            return "{$mulai} WIB – {$selesai} WIB";
+        } catch (\Throwable $e) {
+            return "{$mulai} WIB – " . ucfirst($this->jam_selesai);
+        }
     }
 }
 

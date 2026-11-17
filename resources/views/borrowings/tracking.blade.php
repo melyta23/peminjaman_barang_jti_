@@ -57,6 +57,10 @@
                                     <div class="fw-bold text-primary">{{ $borrowing->tanggal_pinjam->translatedFormat('d F Y') }}</div>
                                 </div>
                                 <div class="col-sm-6">
+                                    <span class="text-muted">Jam / Waktu:</span>
+                                    <div class="fw-bold text-dark">{{ $borrowing->rentang_waktu }}</div>
+                                </div>
+                                <div class="col-sm-6">
                                     <span class="text-muted">Estimasi Kembali:</span>
                                     <div class="fw-bold text-danger">{{ $borrowing->tanggal_kembali->translatedFormat('d F Y') }}</div>
                                 </div>

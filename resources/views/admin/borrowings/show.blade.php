@@ -1,9 +1,10 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
 @section('title', 'Verifikasi Peminjaman ' . $borrowing->kode_transaksi)
+@section('page_title', 'Verifikasi & Kelola Peminjaman')
 
 @section('content')
-<div class="container">
+<div class="pb-3">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
             <h3 class="fw-bold mb-1">Verifikasi & Pengelolaan Peminjaman</h3>
@@ -43,14 +44,31 @@
                         <div class="col-sm-6">
                             <span class="text-muted small d-block">No. WhatsApp / HP:</span>
                             <div>
-                                <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $borrowing->no_hp) }}" target="_blank" class="text-success fw-bold text-decoration-none">
-                                    <i class="bi bi-whatsapp me-1"></i> {{ $borrowing->no_hp }}
-                                </a>
+                                @php
+                                    $rawPhone = $borrowing->no_hp ?? '';
+                                    $cleanPhone = preg_replace('/[^0-9]/', '', $rawPhone);
+                                    if (str_starts_with($cleanPhone, '0')) {
+                                        $cleanPhone = '62' . substr($cleanPhone, 1);
+                                    } elseif (str_starts_with($cleanPhone, '8')) {
+                                        $cleanPhone = '62' . $cleanPhone;
+                                    }
+                                @endphp
+                                @if(!empty($cleanPhone) && strlen($cleanPhone) >= 9)
+                                    <a href="whatsapp://send?phone={{ $cleanPhone }}" class="text-success fw-bold text-decoration-none" title="Buka Chat di Aplikasi WhatsApp">
+                                        <i class="bi bi-whatsapp me-1"></i> {{ $borrowing->no_hp }}
+                                    </a>
+                                @else
+                                    <span class="text-dark">{{ $borrowing->no_hp ?? '-' }}</span>
+                                @endif
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <span class="text-muted small d-block">Tanggal Mulai Pinjam:</span>
                             <div class="fw-bold text-primary">{{ $borrowing->tanggal_pinjam->translatedFormat('d F Y') }}</div>
+                        </div>
+                        <div class="col-sm-6">
+                            <span class="text-muted small d-block">Jam / Waktu Kegiatan:</span>
+                            <div class="fw-bold text-dark">{{ $borrowing->rentang_waktu }}</div>
                         </div>
                         <div class="col-sm-6">
                             <span class="text-muted small d-block">Estimasi Pengembalian:</span>
@@ -60,6 +78,18 @@
                             <span class="text-muted small d-block">Alasan / Keperluan Peminjaman:</span>
                             <div class="p-2 bg-light rounded border mt-1">{{ $borrowing->keperluan }}</div>
                         </div>
+                        @if($borrowing->lokasi_penggunaan)
+                        <div class="col-12">
+                            <span class="text-muted small d-block">
+                                <i class="bi bi-geo-alt-fill text-danger me-1"></i>Lokasi / Tempat Penggunaan Barang:
+                            </span>
+                            <div class="p-2 mt-1 d-flex align-items-center gap-2 rounded border"
+                                style="background: rgba(239,68,68,0.06); border-color: rgba(239,68,68,0.25) !important;">
+                                <i class="bi bi-pin-map-fill text-danger"></i>
+                                <span class="fw-semibold text-danger-emphasis">{{ $borrowing->lokasi_penggunaan }}</span>
+                            </div>
+                        </div>
+                        @endif
                     </div>
 
                     <h6 class="fw-bold border-top pt-3 mb-3">Daftar Barang yang Diminta:</h6>

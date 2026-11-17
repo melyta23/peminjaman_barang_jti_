@@ -329,11 +329,32 @@
                                     onchange="pilihBarang({{ $cat->id }}, this.value)">
                                 <option value="">— Pilih nama barang —</option>
                                 @foreach($cat->items as $item)
-                                    @php $ready = $item->stok_tersedia > 0; @endphp
+                                    @php
+                                        $ready = $item->stok_tersedia > 0;
+                                        // Ambil lokasi dari borrowing aktif pertama yang terkait item ini
+                                        $activeLokasi = '';
+                                        $activePeminjam = '';
+                                        $activeTglKembali = '';
+                                        if (!$ready) {
+                                            $activeDetail = $item->borrowingDetails
+                                                ->filter(fn($d) => $d->borrowing && $d->borrowing->status === 'disetujui')
+                                                ->first();
+                                            if ($activeDetail && $activeDetail->borrowing) {
+                                                $activeLokasi    = $activeDetail->borrowing->lokasi_penggunaan ?? '';
+                                                $activePeminjam  = $activeDetail->borrowing->nama_peminjam ?? '';
+                                                $activeTglKembali = $activeDetail->borrowing->tanggal_kembali
+                                                    ? \Carbon\Carbon::parse($activeDetail->borrowing->tanggal_kembali)->translatedFormat('d F Y')
+                                                    : '';
+                                            }
+                                        }
+                                    @endphp
                                     <option value="{{ $item->id }}"
                                             data-nama="{{ $item->nama_barang }}"
                                             data-stok="{{ $item->stok_tersedia }}"
-                                            data-ready="{{ $ready ? '1' : '0' }}">
+                                            data-ready="{{ $ready ? '1' : '0' }}"
+                                            data-lokasi="{{ $activeLokasi }}"
+                                            data-peminjam="{{ $activePeminjam }}"
+                                            data-tglkembali="{{ $activeTglKembali }}">
                                         {{ $item->nama_barang }}
                                         ({{ $ready ? '✓ ' . $item->stok_tersedia . ' tersedia' : '✗ Dipinjam' }})
                                     </option>
@@ -397,10 +418,13 @@
 
         if (!itemId) { info.classList.remove('show'); return; }
 
-        const opt   = select.options[select.selectedIndex];
-        const nama  = opt.getAttribute('data-nama');
-        const stok  = opt.getAttribute('data-stok');
-        const ready = opt.getAttribute('data-ready') === '1';
+        const opt        = select.options[select.selectedIndex];
+        const nama       = opt.getAttribute('data-nama');
+        const stok       = opt.getAttribute('data-stok');
+        const ready      = opt.getAttribute('data-ready') === '1';
+        const lokasi     = opt.getAttribute('data-lokasi') || '';
+        const peminjam   = opt.getAttribute('data-peminjam') || '';
+        const tglKembali = opt.getAttribute('data-tglkembali') || '';
 
         document.getElementById('iname-' + catId).textContent = nama;
 
@@ -412,8 +436,29 @@
             btn.innerHTML = 'Pinjam Barang Ini <i class="bi bi-arrow-right ms-1"></i>';
             btn.removeAttribute('disabled');
         } else {
-            stokEl.innerHTML = '<span class="badge fw-semibold" style="background:rgba(239,68,68,0.1);color:#dc2626;padding:4px 10px;border-radius:6px;">✗ Sedang Dipinjam</span>';
-            btn.className = 'btn btn-secondary w-100 fw-bold disabled';
+            // Tampilkan badge "Sedang Dipinjam" + info lokasi jika ada
+            let lokasiHtml = '';
+            if (lokasi) {
+                lokasiHtml = `
+                    <div class="mt-2 p-2 rounded-3 d-flex align-items-start gap-2"
+                         style="background:rgba(239,68,68,0.07); border:1px solid rgba(239,68,68,0.2); font-size:0.8rem;">
+                        <i class="bi bi-geo-alt-fill text-danger mt-0" style="font-size:0.9rem; flex-shrink:0;"></i>
+                        <div>
+                            <div class="fw-semibold text-danger-emphasis">Sedang digunakan di:</div>
+                            <div class="text-dark fw-bold">${lokasi}</div>
+                            ${tglKembali ? `<div class="text-muted mt-1"><i class="bi bi-calendar-x me-1"></i>Estimasi kembali: <strong>${tglKembali}</strong></div>` : ''}
+                        </div>
+                    </div>`;
+            } else {
+                lokasiHtml = `<div class="mt-2 text-muted small"><i class="bi bi-info-circle me-1"></i>Lokasi penggunaan tidak dicatat.</div>`;
+            }
+
+            stokEl.innerHTML = `
+                <span class="badge fw-semibold" style="background:rgba(239,68,68,0.1);color:#dc2626;padding:4px 10px;border-radius:6px;">
+                    ✗ Stok Sedang Dipinjam
+                </span>
+                ${lokasiHtml}`;
+            btn.className = 'btn btn-secondary w-100 fw-bold disabled mt-2';
             btn.removeAttribute('href');
             btn.innerHTML = 'Stok Tidak Tersedia';
         }

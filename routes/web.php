@@ -16,6 +16,9 @@ Route::get('/katalog', [ItemController::class, 'index'])->name('katalog');
 Route::get('/api/kategori/{id}/items', [ItemController::class, 'getByCategory'])->name('api.items.by_category');
 
 // Form & Pengajuan Peminjaman
+Route::get('/peminjaman', function () {
+    return redirect()->route('peminjaman.create');
+})->name('peminjaman.index');
 Route::get('/peminjaman/ajukan', [BorrowingController::class, 'create'])->name('peminjaman.create');
 Route::post('/peminjaman', [BorrowingController::class, 'store'])->name('peminjaman.store');
 Route::get('/peminjaman/{id}', [BorrowingController::class, 'show'])->name('peminjaman.show');
