@@ -283,6 +283,17 @@
             color: rgba(255,255,255,0.5);
             border-top: 1px solid rgba(255,255,255,0.07);
         }
+
+        /* ─── RESPONSIVE MOBILE ─────────────────────── */
+        @media (max-width: 575.98px) {
+            .topbar { font-size: 0.7rem; padding: 5px 0; }
+            .main-navbar .container { height: 54px; }
+            .brand-name { font-size: 0.95rem; }
+            .user-dropdown-toggle { padding: 5px 8px; font-size: 0.78rem; }
+        }
+        @media (max-width: 991.98px) {
+            .navbar-actions { gap: 6px; }
+        }
     </style>
     @stack('styles')
 </head>
@@ -291,14 +302,18 @@
     <!-- TOPBAR INFO -->
     <div class="topbar">
         <div class="container d-flex align-items-center justify-content-between">
-            <span>
+            <span class="d-none d-md-inline">
                 <span class="dot"></span>
                 <strong style="color:#fff;">SIPEMBAR JTI</strong>
                 &nbsp;|&nbsp; Jurusan Teknologi Informasi — Politeknik Negeri Jember
             </span>
-            <div class="d-flex align-items-center gap-3">
-                <span><i class="bi bi-clock me-1"></i>Operasional: Senin – Jumat (07.30 – 16.00 WIB)</span>
-                <a href="{{ route('peminjaman.tracking') }}"><i class="bi bi-search me-1"></i>Lacak Pengajuan</a>
+            <span class="d-inline d-md-none">
+                <span class="dot"></span>
+                <strong style="color:#fff;">SIPEMBAR JTI</strong>
+            </span>
+            <div class="d-flex align-items-center gap-2 gap-md-3">
+                <span class="d-none d-sm-inline"><i class="bi bi-clock me-1"></i>Senin – Jumat (07.30 – 16.00 WIB)</span>
+                <a href="{{ route('peminjaman.tracking') }}"><i class="bi bi-search me-1"></i><span class="d-none d-sm-inline">Lacak Pengajuan</span><span class="d-inline d-sm-none">Lacak</span></a>
             </div>
         </div>
     </div>
@@ -314,11 +329,11 @@
                 </div>
                 <div>
                     <div class="brand-name">SIPEMBAR JTI</div>
-                    <div class="brand-sub">Politeknik Negeri Jember</div>
+                    <div class="brand-sub d-none d-sm-block">Politeknik Negeri Jember</div>
                 </div>
             </a>
 
-            <!-- Nav Links -->
+            <!-- Nav Links (desktop only) -->
             <ul class="navbar-nav-links d-none d-lg-flex">
                 <li>
                     <a href="{{ route('home') }}" class="{{ request()->routeIs('home') ? 'active' : '' }}">
@@ -338,19 +353,23 @@
             </ul>
 
             <!-- Actions -->
-            <div class="navbar-actions ms-auto">
+            <div class="navbar-actions ms-auto d-flex align-items-center gap-2">
                 @if(Auth::check() && Auth::user()->isAdmin())
-                    <a class="btn-admin" href="{{ route('admin.dashboard') }}">
+                    {{-- Desktop: label + icon, Mobile: icon only --}}
+                    <a class="btn-admin d-none d-sm-inline-flex" href="{{ route('admin.dashboard') }}">
                         <i class="bi bi-speedometer2"></i> Dashboard Admin
+                    </a>
+                    <a class="btn-admin d-inline-flex d-sm-none" href="{{ route('admin.dashboard') }}" style="padding:7px 10px;" title="Dashboard Admin">
+                        <i class="bi bi-speedometer2"></i>
                     </a>
                     <div class="dropdown">
                         <button class="user-dropdown-toggle" type="button" data-bs-toggle="dropdown">
                             <i class="bi bi-person-circle text-primary"></i>
-                            <span>{{ Auth::user()->name }}</span>
+                            <span class="d-none d-md-inline">{{ Auth::user()->name }}</span>
                             <i class="bi bi-chevron-down small text-muted"></i>
                         </button>
                         <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2" style="min-width: 180px; border-radius: 10px; overflow: hidden;">
-                            <li><span class="dropdown-item-text small text-muted py-2">Petugas / Laboran</span></li>
+                            <li><span class="dropdown-item-text small text-muted py-2">{{ Auth::user()->name }}</span></li>
                             <li><hr class="dropdown-divider my-0"></li>
                             <li>
                                 <form action="{{ route('logout') }}" method="POST">
@@ -363,14 +382,43 @@
                         </ul>
                     </div>
                 @else
-                    <a class="btn-portal" href="{{ route('login') }}">
+                    <a class="btn-portal d-none d-sm-inline-flex" href="{{ route('login') }}">
                         <i class="bi bi-shield-lock"></i> Portal Petugas
                     </a>
+                    <a class="btn-portal d-inline-flex d-sm-none" href="{{ route('login') }}" style="padding:7px 10px;" title="Portal Petugas">
+                        <i class="bi bi-shield-lock"></i>
+                    </a>
                 @endif
+
+                <!-- Hamburger untuk mobile -->
+                <button class="d-lg-none btn btn-sm btn-outline-secondary px-2 py-1 rounded-3" type="button"
+                        data-bs-toggle="collapse" data-bs-target="#mobileNav" aria-expanded="false" aria-label="Toggle menu">
+                    <i class="bi bi-list fs-5"></i>
+                </button>
             </div>
 
         </div>
+
     </nav>
+
+    <!-- Mobile Nav Menu (di luar sticky nav → expand mendorong konten ke bawah) -->
+    <div class="collapse d-lg-none" id="mobileNav"
+         style="background:#fff; border-bottom:1px solid var(--border); box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+        <div class="container py-2 d-flex flex-column gap-1">
+            <a href="{{ route('home') }}"
+               class="d-flex align-items-center gap-2 px-3 py-2 rounded-3 text-decoration-none fw-semibold small {{ request()->routeIs('home') ? 'text-primary bg-light' : 'text-dark' }}">
+                <i class="bi bi-grid-3x3-gap"></i> Sarana Prasarana
+            </a>
+            <a href="{{ route('peminjaman.create') }}"
+               class="d-flex align-items-center gap-2 px-3 py-2 rounded-3 text-decoration-none fw-semibold small {{ request()->routeIs('peminjaman.create') ? 'text-primary bg-light' : 'text-dark' }}">
+                <i class="bi bi-file-earmark-plus"></i> Buat Pengajuan
+            </a>
+            <a href="{{ route('peminjaman.tracking') }}"
+               class="d-flex align-items-center gap-2 px-3 py-2 rounded-3 text-decoration-none fw-semibold small {{ request()->routeIs('peminjaman.tracking') ? 'text-primary bg-light' : 'text-dark' }}">
+                <i class="bi bi-search"></i> Cek Status Surat
+            </a>
+        </div>
+    </div>
 
     <!-- Flash Messages -->
     <div class="container mt-3">
@@ -399,9 +447,15 @@
 
     <!-- Footer -->
     <footer class="py-3">
-        <div class="container d-flex flex-wrap justify-content-between align-items-center gap-2 small">
-            <span><strong style="color:#fff;">Jurusan Teknologi Informasi</strong> — Politeknik Negeri Jember · Jl. Mastrip PO. BOX 164 Jember 68121</span>
-            <span>&copy; {{ date('Y') }} SIPEMBAR JTI Polije</span>
+        <div class="container small">
+            <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-1">
+                <span>
+                    <strong style="color:#fff;">Jurusan Teknologi Informasi</strong>
+                    <span class="d-none d-sm-inline"> — Politeknik Negeri Jember · Jl. Mastrip PO. BOX 164 Jember 68121</span>
+                    <span class="d-inline d-sm-none text-white-50"> — Politeknik Negeri Jember</span>
+                </span>
+                <span>&copy; {{ date('Y') }} SIPEMBAR JTI Polije</span>
+            </div>
         </div>
     </footer>
 
