@@ -83,25 +83,12 @@
                                         {{ $item->stok_tersedia }}
                                     </span> 
                                     / {{ $item->stok_total }} unit
-
-                                    {{-- Tampilkan keterangan "dipinjam di" jika ada unit yang sedang dipinjam --}}
                                     @php
-                                        $activeBorrowingDetails = $item->borrowingDetails->filter(
-                                            fn($d) => $d->borrowing && $d->borrowing->status === 'disetujui'
-                                        );
+                                        $unitDipinjam = $item->stok_total - $item->stok_tersedia;
                                     @endphp
-                                    @if($activeBorrowingDetails->isNotEmpty())
-                                        <div class="mt-1">
-                                            @foreach($activeBorrowingDetails as $ad)
-                                                <span class="badge d-inline-flex align-items-center gap-1 mt-1 px-2 py-1"
-                                                    style="background: rgba(239,68,68,0.10); color: #b91c1c; border: 1px solid rgba(239,68,68,0.25); font-size: 0.72rem; border-radius: 8px; white-space: normal; text-align: left; max-width: 200px;">
-                                                    <i class="bi bi-geo-alt-fill flex-shrink-0" style="font-size: 0.72rem;"></i>
-                                                    <span>
-                                                        {{ $ad->jumlah }} unit dipinjam di:<br>
-                                                        <strong>{{ $ad->borrowing->lokasi_penggunaan ?? 'Lokasi tidak dicatat' }}</strong>
-                                                    </span>
-                                                </span>
-                                            @endforeach
+                                    @if($unitDipinjam > 0)
+                                        <div class="small text-danger mt-1">
+                                            <i class="bi bi-arrow-right-circle me-1"></i>{{ $unitDipinjam }} unit dipinjam
                                         </div>
                                     @endif
                                 </td>

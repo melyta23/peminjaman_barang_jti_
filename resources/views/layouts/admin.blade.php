@@ -424,7 +424,6 @@
             <div class="d-flex flex-column overflow-hidden">
                 <div class="d-flex align-items-center gap-1.5">
                     <span class="text-white fw-bold fs-6" style="letter-spacing: -0.3px;">SIPEMBAR JTI</span>
-                    <span class="badge" style="background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.35); font-size: 0.62rem; font-weight: 700; padding: 2px 6px; border-radius: 4px;">PRO</span>
                 </div>
                 <span class="text-white-50 small text-truncate" style="font-size: 0.68rem; letter-spacing: 0.5px;">POLIJE COMMAND CENTER</span>
             </div>
