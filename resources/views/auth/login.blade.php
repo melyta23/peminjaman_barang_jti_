@@ -154,6 +154,38 @@
         background-color: #1a56db;
         border-color: #1a56db;
     }
+
+    .pulse-online {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background-color: #22c55e;
+        display: inline-block;
+        box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7);
+        animation: pulse-ring-green 2s infinite;
+    }
+
+    .pulse-offline {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background-color: #ef4444;
+        display: inline-block;
+        box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+        animation: pulse-ring-red 2s infinite;
+    }
+
+    @keyframes pulse-ring-green {
+        0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7); }
+        70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(34, 197, 94, 0); }
+        100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+    }
+
+    @keyframes pulse-ring-red {
+        0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+        70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(239, 68, 68, 0); }
+        100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+    }
 </style>
 
 <div class="login-wrapper py-4 py-lg-5">
@@ -176,7 +208,19 @@
                 </div>
 
                 <!-- Main Card -->
+                @php
+                    $lastActive = \Illuminate\Support\Facades\Cache::get('admin_last_active');
+                    $isAdminOnline = $lastActive && (now()->timestamp - (int) $lastActive) <= 10;
+                @endphp
                 <div class="card login-card rounded-4 overflow-hidden">
+                    <!-- Status Admin Online / Offline Realtime -->
+                    <div class="px-4 py-2.5 d-flex align-items-center" style="background: #08111e; border-bottom: 1px solid rgba(255,255,255,0.08);">
+                        <span class="text-white small fw-semibold d-flex align-items-center gap-2" style="font-size: 0.78rem;">
+                            <span id="loginStatusDot" class="{{ $isAdminOnline ? 'pulse-online' : 'pulse-offline' }}"></span>
+                            <span id="loginStatusText">{{ $isAdminOnline ? 'Admin Sedang Online' : 'Admin Sedang Offline' }}</span>
+                        </span>
+                    </div>
+
                     <div class="card-body p-4 p-sm-4">
 
                         <!-- Informasi untuk Mahasiswa / Peminjam -->
@@ -294,6 +338,51 @@
                 toggleIcon.className = isPassword ? 'bi bi-eye-slash text-primary' : 'bi bi-eye';
             });
         }
+
+        // Real-time status server check (Admin Online hijau / Offline merah)
+        const statusDot = document.getElementById('loginStatusDot');
+        const statusText = document.getElementById('loginStatusText');
+
+        function setServerStatus(isOnline) {
+            if (!statusDot || !statusText) return;
+            if (isOnline) {
+                statusDot.className = 'pulse-online';
+                statusText.textContent = 'Admin Sedang Online';
+            } else {
+                statusDot.className = 'pulse-offline';
+                statusText.textContent = 'Admin Sedang Offline';
+            }
+        }
+
+        async function checkServerStatus() {
+            if (!navigator.onLine) {
+                setServerStatus(false);
+                return;
+            }
+            const controller = new AbortController();
+            const timer = setTimeout(() => controller.abort(), 3000);
+            try {
+                const res = await fetch("{{ route('api.server_status') }}?t=" + Date.now(), {
+                    cache: 'no-store',
+                    signal: controller.signal
+                });
+                clearTimeout(timer);
+                if (!res.ok) {
+                    setServerStatus(false);
+                    return;
+                }
+                const data = await res.json();
+                setServerStatus(Boolean(data.admin_online));
+            } catch (e) {
+                clearTimeout(timer);
+                setServerStatus(false);
+            }
+        }
+
+        checkServerStatus();
+        setInterval(checkServerStatus, 3000);
+        window.addEventListener('online', checkServerStatus);
+        window.addEventListener('offline', () => setServerStatus(false));
     });
 
     function selectDemoAccount(email, password, element) {

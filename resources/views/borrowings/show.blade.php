@@ -44,7 +44,7 @@
                         <div class="alert alert-warning d-flex align-items-center" role="alert">
                             <i class="bi bi-hourglass-split fs-4 me-3"></i>
                             <div>
-                                <strong>Pengajuan Sedang Menunggu Verifikasi Admin/Laboran JTI.</strong><br>
+                                <strong>Pengajuan Sedang Menunggu Verifikasi Admin/Laboran MMC.</strong><br>
                                 Silakan cetak template surat peminjaman di bawah ini dan mintakan tanda tangan kepada penanggung jawab / dosen pembimbing sebelum mengambil barang di laboratorium.
                             </div>
                         </div>
@@ -69,7 +69,7 @@
                             <i class="bi bi-shield-check fs-4 me-3"></i>
                             <div>
                                 <strong>Barang Telah Selesai Dikembalikan.</strong><br>
-                                Tanggal Pengembalian: {{ $borrowing->tanggal_pengembalian_aktual?->translatedFormat('d F Y') ?? '-' }}. Terima kasih telah merawat inventaris lab JTI.
+                                Tanggal Pengembalian: {{ $borrowing->tanggal_pengembalian_aktual?->translatedFormat('d F Y') ?? '-' }}. Terima kasih telah merawat inventaris lab MMC.
                             </div>
                         </div>
                     @endif

@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'Edit Sarpras ' . $item->kode_barang . ' - Admin SIPEMBAR JTI')
+@section('title', 'Edit Sarpras ' . $item->kode_barang . ' - Admin SIPEMBAR MMC')
 @section('page_title', 'Edit Sarana Prasarana')
 
 @section('content')

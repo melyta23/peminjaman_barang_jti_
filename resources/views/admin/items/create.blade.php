@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'Tambah Sarana Prasarana Baru - Admin SIPEMBAR JTI')
+@section('title', 'Tambah Sarana Prasarana Baru - Admin SIPEMBAR MMC')
 @section('page_title', 'Tambah Sarana Prasarana Baru')
 
 @section('content')

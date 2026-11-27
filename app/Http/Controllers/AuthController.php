@@ -43,6 +43,7 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
+        \Illuminate\Support\Facades\Cache::forget('admin_last_active');
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();

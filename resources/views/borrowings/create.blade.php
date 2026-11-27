@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Form Permohonan Peminjaman Sarpras JTI')
+@section('title', 'Form Permohonan Peminjaman Sarpras MMC')
 
 @section('content')
 <div class="container py-2">
@@ -65,7 +65,7 @@
                                         <option value="D4 Teknik Komputer" {{ old('prodi', $user?->prodi) == 'D4 Teknik Komputer' ? 'selected' : '' }}>D4 Teknik Komputer</option>
                                         <option value="D4 Bisnis Digital" {{ old('prodi', $user?->prodi) == 'D4 Bisnis Digital' ? 'selected' : '' }}>D4 Bisnis Digital</option>
                                         <option value="Ormawa / BEM / UKM Polije" {{ old('prodi', $user?->prodi) == 'Ormawa / BEM / UKM Polije' ? 'selected' : '' }}>Ormawa / BEM / UKM Polije</option>
-                                        <option value="Dosen / Tendik JTI" {{ old('prodi', $user?->prodi) == 'Dosen / Tendik JTI' ? 'selected' : '' }}>Dosen / Tendik JTI</option>
+                                        <option value="Dosen / Tendik MMC" {{ old('prodi', $user?->prodi) == 'Dosen / Tendik MMC' ? 'selected' : '' }}>Dosen / Tendik MMC</option>
                                     </select>
                                     @error('prodi') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                 </div>
@@ -176,7 +176,7 @@
                                         class="form-control @error('lokasi_penggunaan') is-invalid @enderror"
                                         value="{{ old('lokasi_penggunaan') }}"
                                         required
-                                        placeholder="Contoh: Aula Polije Lt. 2, Lab Alat Musik JTI, Panggung Outdoor Polije, dll.">
+                                        placeholder="Contoh: Aula Polije Lt. 2, Lab Alat Musik MMC, Panggung Outdoor Polije, dll.">
                                     <div class="form-text small">
                                         <i class="bi bi-info-circle me-1"></i>Isi dengan lokasi spesifik tempat barang akan digunakan selama masa peminjaman.
                                     </div>
@@ -326,10 +326,10 @@ document.addEventListener('DOMContentLoaded', function () {
             let options = '<option value="">-- Pilih Sarana Prasarana --</option>';
             items.forEach(item => {
                 const isSel = (selItemId && selItemId == item.id) ? 'selected' : '';
-                const stokLabel = item.stok_tersedia > 0 ? `${item.stok_tersedia} Unit` : 'Habis';
+                const stokStatus = item.stok_tersedia > 0 ? `Tersedia: ${item.stok_tersedia} Unit` : '(Sedang Dipinjam)';
                 const disabledAttr = item.stok_tersedia <= 0 ? 'disabled' : '';
                 options += `<option value="${item.id}" ${isSel} ${disabledAttr} data-stok="${item.stok_tersedia}" data-kode="${item.kode_barang}" data-kondisi="${item.kondisi}" data-nama="${item.nama_barang}">
-                    ${item.nama_barang} (${item.merk || '-'}) — Tersedia: ${stokLabel}
+                    ${item.nama_barang} (${item.merk || '-'}) — ${stokStatus}
                 </option>`;
             });
 

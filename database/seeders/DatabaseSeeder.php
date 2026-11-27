@@ -17,9 +17,9 @@ class DatabaseSeeder extends Seeder
     {
         // 1. Buat User Admin & Mahasiswa
         User::updateOrCreate(
-            ['email' => 'admin@jti.ac.id'],
+            ['email' => 'admin@MMC.ac.id'],
             [
-                'name' => 'Admin Laboran JTI',
+                'name' => 'Admin Laboran MMC',
                 'password' => Hash::make('admin123'),
                 'role' => 'admin',
                 'nim_nip' => '198501012015041001',
@@ -29,7 +29,7 @@ class DatabaseSeeder extends Seeder
         );
 
         User::updateOrCreate(
-            ['email' => 'mahasiswa@jti.ac.id'],
+            ['email' => 'mahasiswa@MMC.ac.id'],
             [
                 'name' => 'Ahmad Fajar',
                 'password' => Hash::make('password123'),
@@ -46,7 +46,7 @@ class DatabaseSeeder extends Seeder
             [
                 'nama' => 'Alat Musik',
                 'icon' => 'bi-music-note-beamed',
-                'deskripsi' => 'Peralatan instrumen dan audio untuk studio musik/event JTI.',
+                'deskripsi' => 'Peralatan instrumen dan audio untuk studio musik/event MMC.',
             ]
         );
 
@@ -64,7 +64,7 @@ class DatabaseSeeder extends Seeder
             [
                 'nama' => 'PC / Komputer & Periferal',
                 'icon' => 'bi-pc-display',
-                'deskripsi' => 'Perangkat komputer, laptop, monitor, dan periferal lab JTI.',
+                'deskripsi' => 'Perangkat komputer, laptop, monitor, dan periferal lab MMC.',
             ]
         );
 
@@ -147,7 +147,7 @@ class DatabaseSeeder extends Seeder
                 'stok_total' => 2,
                 'stok_tersedia' => 2,
                 'kondisi' => 'Baik',
-                'lokasi_penyimpanan' => 'Studio Foto JTI',
+                'lokasi_penyimpanan' => 'Studio Foto MMC',
                 'deskripsi' => 'Lampu continuous daylight lengkap dengan stand dan softbox 60x90cm.',
             ],
             [

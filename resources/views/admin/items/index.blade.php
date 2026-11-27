@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'Kelola Inventaris Sarpras - Admin SIPEMBAR JTI')
+@section('title', 'Kelola Inventaris Sarpras - Admin SIPEMBAR MMC')
 @section('page_title', 'Inventaris Sarpras Laboratorium')
 
 @section('content')

@@ -102,8 +102,8 @@ class BorrowingController extends Controller
 
         DB::beginTransaction();
         try {
-            // Generate Kode Transaksi unik: JTI-YYMM-RAND
-            $kodeTransaksi = 'JTI-' . date('Ym') . '-' . strtoupper(Str::random(5));
+            // Generate Kode Transaksi unik: MMC-YYMM-RAND
+            $kodeTransaksi = 'MMC-' . date('Ym') . '-' . strtoupper(Str::random(5));
 
             $borrowingData = [
                 'kode_transaksi' => $kodeTransaksi,
@@ -163,7 +163,7 @@ class BorrowingController extends Controller
     }
 
     /**
-     * Tampilan Resmi Template Surat Peminjaman Barang JTI (Printable)
+     * Tampilan Resmi Template Surat Peminjaman Barang MMC (Printable)
      */
     public function surat($id)
     {
@@ -177,16 +177,27 @@ class BorrowingController extends Controller
      */
     public function tracking(Request $request)
     {
-        $borrowing = null;
+        $items = Item::with('category')
+            ->select('id', 'category_id', 'kode_barang', 'nama_barang', 'merk', 'stok_tersedia', 'stok_total')
+            ->orderBy('nama_barang', 'asc')
+            ->get();
+
+        $borrowings = collect();
         if ($request->filled('kode')) {
-            $borrowing = Borrowing::with('details.item.category')
-                ->where('kode_transaksi', trim($request->kode))
-                ->orWhere('nim_nip', trim($request->kode))
+            $keyword = trim($request->kode);
+            $borrowings = Borrowing::with('details.item.category')
+                ->where(function ($query) use ($keyword) {
+                    $query->where('kode_transaksi', 'like', "%{$keyword}%")
+                        ->orWhere('nim_nip', 'like', "%{$keyword}%")
+                        ->orWhereHas('details.item', function ($q) use ($keyword) {
+                            $q->where('nama_barang', 'like', "%{$keyword}%");
+                        });
+                })
                 ->latest()
-                ->first();
+                ->get();
         }
 
-        return view('borrowings.tracking', compact('borrowing'));
+        return view('borrowings.tracking', compact('borrowings', 'items'));
     }
 }
 

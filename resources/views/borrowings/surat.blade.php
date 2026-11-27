@@ -690,14 +690,14 @@
                                     <button type="button" class="btn btn-outline-primary btn-sm rounded-pill px-3" onclick="applyPreset('bem')">
                                         🏛️ BEM Polije (Default)
                                     </button>
-                                    <button type="button" class="btn btn-outline-primary btn-sm rounded-pill px-3" onclick="applyPreset('jti')">
-                                        💻 Jurusan Teknologi Informasi (JTI)
+                                    <button type="button" class="btn btn-outline-primary btn-sm rounded-pill px-3" onclick="applyPreset('MMC')">
+                                        💻 Jurusan Teknologi Informasi (MMC)
                                     </button>
                                     <button type="button" class="btn btn-outline-primary btn-sm rounded-pill px-3" onclick="applyPreset('hmti')">
                                         👥 HMTI Polije
                                     </button>
                                     <button type="button" class="btn btn-outline-primary btn-sm rounded-pill px-3" onclick="applyPreset('lab')">
-                                        🔬 Laboratorium JTI
+                                        🔬 Laboratorium MMC
                                     </button>
                                     <button type="button" class="btn btn-outline-secondary btn-sm rounded-pill px-3" onclick="applyPreset('pusat')">
                                         🏫 Polije Pusat
@@ -892,12 +892,12 @@
                 ttdKanan1: 'Presiden Mahasiswa',
                 ttdKanan2: 'Politeknik Negeri Jember'
             },
-            jti: {
+            MMC: {
                 baris1: 'KEMENTERIAN PENDIDIKAN TINGGI, SAINS, DAN TEKNOLOGI',
                 baris2: 'POLITEKNIK NEGERI JEMBER',
                 baris3: 'JURUSAN TEKNOLOGI INFORMASI',
                 alamat: 'Jl. Mastrip PO. BOX 164 Jember 68121 Jawa Timur',
-                kontak: 'Telp. (0331) 333532, Email : jti@polije.ac.id · Website: jti.polije.ac.id',
+                kontak: 'Telp. (0331) 333532, Email : MMC@polije.ac.id · Website: MMC.polije.ac.id',
                 logoKanan: 'polije',
                 penyelenggara: 'Jurusan Teknologi Informasi Politeknik Negeri Jember',
                 ttdKiri1: 'Mengetahui,',
@@ -927,9 +927,9 @@
             lab: {
                 baris1: 'POLITEKNIK NEGERI JEMBER',
                 baris2: 'JURUSAN TEKNOLOGI INFORMASI',
-                baris3: 'LABORATORIUM SARANA PRASARANA JTI',
+                baris3: 'LABORATORIUM SARANA PRASARANA MMC',
                 alamat: 'Gedung TI Polije, Jl. Mastrip PO. BOX 164 Jember 68121',
-                kontak: 'Kontak Laboran: 081287349270, Email : lab.jti@polije.ac.id',
+                kontak: 'Kontak Laboran: 081287349270, Email : lab.MMC@polije.ac.id',
                 logoKanan: 'polije',
                 penyelenggara: 'Laboratorium Sarana & Prasarana Jurusan Teknologi Informasi',
                 ttdKiri1: 'Mengetahui,',

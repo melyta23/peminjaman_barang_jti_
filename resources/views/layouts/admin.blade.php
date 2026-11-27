@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', 'Admin Console') - SIPEMBAR JTI Polije</title>
+    <title>@yield('title', 'Admin Console') - SIPEMBAR MMC Polije</title>
     <link rel="icon" type="image/png" href="{{ asset('images/logo-polije.png') }}">
 
     <!-- Bootstrap 5.3.3 & Bootstrap Icons -->
@@ -369,10 +369,26 @@
             animation: pulse-ring 2s infinite;
         }
 
+        .pulse-offline {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #ef4444;
+            display: inline-block;
+            box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+            animation: pulse-ring-red 2s infinite;
+        }
+
         @keyframes pulse-ring {
             0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
             70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
             100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+        }
+
+        @keyframes pulse-ring-red {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(239, 68, 68, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
         }
 
         /* Custom Scrollbar */
@@ -423,7 +439,7 @@
             </div>
             <div class="d-flex flex-column overflow-hidden">
                 <div class="d-flex align-items-center gap-1.5">
-                    <span class="text-white fw-bold fs-6" style="letter-spacing: -0.3px;">SIPEMBAR JTI</span>
+                    <span class="text-white fw-bold fs-6" style="letter-spacing: -0.3px;">SIPEMBAR MMC</span>
                 </div>
                 <span class="text-white-50 small text-truncate" style="font-size: 0.68rem; letter-spacing: 0.5px;">POLIJE COMMAND CENTER</span>
             </div>
@@ -450,7 +466,7 @@
                 @endif
             </a>
 
-            <div class="menu-header mt-3">Inventaris 3 Lab JTI</div>
+            <div class="menu-header mt-3">Inventaris 3 Lab MMC</div>
             
             <a href="{{ route('admin.items.index') }}" class="sidebar-link {{ request()->routeIs('admin.items.index') && !request('category_id') ? 'active' : '' }}">
                 <div class="sidebar-link-content">
@@ -498,9 +514,10 @@
             <div class="sidebar-widget">
                 <div class="d-flex align-items-center justify-content-between mb-2">
                     <span class="text-white small fw-semibold d-flex align-items-center gap-1.5" style="font-size: 0.75rem;">
-                        <span class="pulse-online me-1"></span> Sistem Terhubung
+                        <span id="adminStatusDot" class="pulse-online me-1"></span>
+                        <span id="adminStatusText">Sistem Terhubung</span>
                     </span>
-                    <span class="badge" style="background: rgba(34, 197, 94, 0.2); color: #4ade80; border: 1px solid rgba(74, 222, 128, 0.4); font-size: 0.65rem; font-weight: 700; letter-spacing: 0.5px;">ONLINE</span>
+                    <span id="adminStatusBadge" class="badge" style="background: rgba(34, 197, 94, 0.2); color: #4ade80; border: 1px solid rgba(74, 222, 128, 0.4); font-size: 0.65rem; font-weight: 700; letter-spacing: 0.5px;">ONLINE</span>
                 </div>
                 <div class="d-flex justify-content-between text-white-50" style="font-size: 0.72rem;">
                     <span>Inventaris Lab</span>
@@ -572,9 +589,9 @@
             <div class="d-flex align-items-center gap-3">
                 <!-- Status Badge -->
                 <div class="d-none d-sm-flex align-items-center gap-2 bg-light px-3 py-1.5 rounded-pill border small">
-                    <span class="pulse-online"></span>
+                    <span id="topbarStatusDot" class="pulse-online"></span>
                     <span class="text-muted">Status Server:</span>
-                    <strong class="text-success">Live & Sinkron</strong>
+                    <strong id="topbarStatusText" class="text-success">Live & Sinkron</strong>
                 </div>
 
                 <!-- Notifikasi Cepat -->
@@ -615,8 +632,8 @@
 
         <!-- Admin Footer -->
         <footer class="bg-white border-top py-3 px-4 text-muted small d-flex justify-content-between align-items-center">
-            <div>&copy; {{ date('Y') }} Sistem Peminjaman Sarpras Laboratorium — JTI Polije.</div>
-            <div class="text-primary fw-semibold">SIPEMBAR JTI v2.0 Enterprise</div>
+            <div>&copy; {{ date('Y') }} Sistem Peminjaman Sarpras Laboratorium — MMC Polije.</div>
+            <div class="text-primary fw-semibold">SIPEMBAR MMC v2.0 Enterprise</div>
         </footer>
     </div>
 
@@ -629,6 +646,76 @@
             if (sidebar) sidebar.classList.toggle('show');
             if (backdrop) backdrop.classList.toggle('show');
         }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const statusDot = document.getElementById('adminStatusDot');
+            const statusText = document.getElementById('adminStatusText');
+            const statusBadge = document.getElementById('adminStatusBadge');
+            const topbarDot = document.getElementById('topbarStatusDot');
+            const topbarText = document.getElementById('topbarStatusText');
+
+            function setAdminServerStatus(isOnline) {
+                if (statusDot && statusText && statusBadge) {
+                    if (isOnline) {
+                        statusDot.className = 'pulse-online me-1';
+                        statusText.textContent = 'Sistem Terhubung';
+                        statusBadge.textContent = 'ONLINE';
+                        statusBadge.style.background = 'rgba(34, 197, 94, 0.2)';
+                        statusBadge.style.color = '#4ade80';
+                        statusBadge.style.border = '1px solid rgba(74, 222, 128, 0.4)';
+                    } else {
+                        statusDot.className = 'pulse-offline me-1';
+                        statusText.textContent = 'Sistem Terputus';
+                        statusBadge.textContent = 'OFF';
+                        statusBadge.style.background = 'rgba(239, 68, 68, 0.2)';
+                        statusBadge.style.color = '#f87171';
+                        statusBadge.style.border = '1px solid rgba(248, 113, 113, 0.45)';
+                    }
+                }
+                if (topbarDot && topbarText) {
+                    if (isOnline) {
+                        topbarDot.className = 'pulse-online';
+                        topbarText.textContent = 'Live & Sinkron';
+                        topbarText.className = 'text-success';
+                    } else {
+                        topbarDot.className = 'pulse-offline';
+                        topbarText.textContent = 'Offline / Terputus';
+                        topbarText.className = 'text-danger';
+                    }
+                }
+            }
+
+            async function checkAdminServerStatus() {
+                if (!navigator.onLine) {
+                    setAdminServerStatus(false);
+                    return;
+                }
+                const controller = new AbortController();
+                const timer = setTimeout(() => controller.abort(), 3000);
+                try {
+                    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
+                    const res = await fetch("{{ route('api.admin_heartbeat') }}", {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': csrfToken,
+                            'Accept': 'application/json'
+                        },
+                        cache: 'no-store',
+                        signal: controller.signal
+                    });
+                    clearTimeout(timer);
+                    setAdminServerStatus(res.ok);
+                } catch (e) {
+                    clearTimeout(timer);
+                    setAdminServerStatus(false);
+                }
+            }
+
+            checkAdminServerStatus();
+            setInterval(checkAdminServerStatus, 4000);
+            window.addEventListener('online', checkAdminServerStatus);
+            window.addEventListener('offline', () => setAdminServerStatus(false));
+        });
     </script>
     @stack('scripts')
 </body>

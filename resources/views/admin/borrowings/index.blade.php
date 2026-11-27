@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'Data Peminjaman Barang - Admin SIPEMBAR JTI')
+@section('title', 'Data Peminjaman Barang - Admin SIPEMBAR MMC')
 @section('page_title', 'Data Peminjaman Barang')
 
 @section('content')
@@ -12,10 +12,10 @@
                 <span class="badge px-2.5 py-1 rounded-pill fw-semibold" style="background: rgba(59, 110, 165, 0.12); color: #3b6ea5; border: 1px solid rgba(59, 110, 165, 0.25); font-size: 0.74rem;">
                     <i class="bi bi-shield-check me-1"></i> PANEL ADMINISTRATOR
                 </span>
-                <span class="text-muted small">• Sirkulasi Sarpras JTI</span>
+                <span class="text-muted small">• Sirkulasi Sarpras MMC</span>
             </div>
             <h3 class="fw-bold text-dark mb-1" style="letter-spacing: -0.3px;">Daftar Peminjaman Barang</h3>
-            <p class="text-muted small mb-0">Pantau, verifikasi, dan kelola seluruh pengajuan peminjaman barang laboratorium JTI Polije.</p>
+            <p class="text-muted small mb-0">Pantau, verifikasi, dan kelola seluruh pengajuan peminjaman barang laboratorium MMC Polije.</p>
         </div>
         <div>
             <a href="{{ route('admin.dashboard') }}" class="btn btn-outline-secondary btn-sm px-3 py-2 rounded-3 shadow-2xs fw-semibold d-inline-flex align-items-center gap-1.5">

@@ -299,7 +299,7 @@
                                     </span>
                                 @else
                                     <span class="cat-badge" style="background:rgba(239,68,68,0.1); color:#dc2626;">
-                                        Habis
+                                        Sedang Dipinjam
                                     </span>
                                 @endif
                             </div>

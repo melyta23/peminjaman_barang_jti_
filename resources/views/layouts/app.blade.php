@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', 'Sistem Peminjaman Sarpras') — JTI Politeknik Negeri Jember</title>
+    <title>@yield('title', 'Sistem Peminjaman Sarpras') — MMC Politeknik Negeri Jember</title>
     <link rel="icon" type="image/png" href="{{ asset('images/logo-polije.png') }}">
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -304,12 +304,12 @@
         <div class="container d-flex align-items-center justify-content-between">
             <span class="d-none d-md-inline">
                 <span class="dot"></span>
-                <strong style="color:#fff;">SIPEMBAR JTI</strong>
+                <strong style="color:#fff;">SIPEMBAR MMC</strong>
                 &nbsp;|&nbsp; Jurusan Teknologi Informasi — Politeknik Negeri Jember
             </span>
             <span class="d-inline d-md-none">
                 <span class="dot"></span>
-                <strong style="color:#fff;">SIPEMBAR JTI</strong>
+                <strong style="color:#fff;">SIPEMBAR MMC</strong>
             </span>
             <div class="d-flex align-items-center gap-2 gap-md-3">
                 <span class="d-none d-sm-inline"><i class="bi bi-clock me-1"></i>Senin – Jumat (07.30 – 16.00 WIB)</span>
@@ -328,7 +328,7 @@
                     <img src="{{ asset('images/logo-polije.png') }}" alt="Logo Politeknik Negeri Jember" width="40" height="40">
                 </div>
                 <div>
-                    <div class="brand-name">SIPEMBAR JTI</div>
+                    <div class="brand-name">SIPEMBAR MMC</div>
                     <div class="brand-sub d-none d-sm-block">Politeknik Negeri Jember</div>
                 </div>
             </a>
@@ -454,7 +454,7 @@
                     <span class="d-none d-sm-inline"> — Politeknik Negeri Jember · Jl. Mastrip PO. BOX 164 Jember 68121</span>
                     <span class="d-inline d-sm-none text-white-50"> — Politeknik Negeri Jember</span>
                 </span>
-                <span>&copy; {{ date('Y') }} SIPEMBAR JTI Polije</span>
+                <span>&copy; {{ date('Y') }} SIPEMBAR MMC Polije</span>
             </div>
         </div>
     </footer>
