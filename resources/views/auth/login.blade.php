@@ -212,7 +212,7 @@
                 <!-- Main Card -->
                 @php
                     $isAdminOnline = \App\Models\User::where('role', 'admin')
-                        ->where('updated_at', '>=', now()->subSeconds(15))
+                        ->where('updated_at', '>=', now()->subSeconds(60))
                         ->exists();
                 @endphp
                 <div class="card login-card rounded-4 overflow-hidden">
@@ -362,28 +362,20 @@
                 setServerStatus(false);
                 return;
             }
-            const controller = new AbortController();
-            const timer = setTimeout(() => controller.abort(), 3000);
             try {
                 const res = await fetch("{{ route('api.server_status') }}?t=" + Date.now(), {
-                    cache: 'no-store',
-                    signal: controller.signal
+                    cache: 'no-store'
                 });
-                clearTimeout(timer);
-                if (!res.ok) {
-                    setServerStatus(false);
-                    return;
-                }
+                if (!res.ok) return;
                 const data = await res.json();
                 setServerStatus(Boolean(data.admin_online));
             } catch (e) {
-                clearTimeout(timer);
-                setServerStatus(false);
+                // Abaikan error jaringan sesaat agar status tidak berubah-ubah sendiri
             }
         }
 
         checkServerStatus();
-        setInterval(checkServerStatus, 3000);
+        setInterval(checkServerStatus, 5000);
         window.addEventListener('online', checkServerStatus);
         window.addEventListener('offline', () => setServerStatus(false));
     });

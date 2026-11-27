@@ -648,73 +648,26 @@
         }
 
         document.addEventListener('DOMContentLoaded', function () {
-            const statusDot = document.getElementById('adminStatusDot');
-            const statusText = document.getElementById('adminStatusText');
-            const statusBadge = document.getElementById('adminStatusBadge');
-            const topbarDot = document.getElementById('topbarStatusDot');
-            const topbarText = document.getElementById('topbarStatusText');
-
-            function setAdminServerStatus(isOnline) {
-                if (statusDot && statusText && statusBadge) {
-                    if (isOnline) {
-                        statusDot.className = 'pulse-online me-1';
-                        statusText.textContent = 'Sistem Terhubung';
-                        statusBadge.textContent = 'ONLINE';
-                        statusBadge.style.background = 'rgba(34, 197, 94, 0.2)';
-                        statusBadge.style.color = '#4ade80';
-                        statusBadge.style.border = '1px solid rgba(74, 222, 128, 0.4)';
-                    } else {
-                        statusDot.className = 'pulse-offline me-1';
-                        statusText.textContent = 'Sistem Terputus';
-                        statusBadge.textContent = 'OFF';
-                        statusBadge.style.background = 'rgba(239, 68, 68, 0.2)';
-                        statusBadge.style.color = '#f87171';
-                        statusBadge.style.border = '1px solid rgba(248, 113, 113, 0.45)';
-                    }
-                }
-                if (topbarDot && topbarText) {
-                    if (isOnline) {
-                        topbarDot.className = 'pulse-online';
-                        topbarText.textContent = 'Live & Sinkron';
-                        topbarText.className = 'text-success';
-                    } else {
-                        topbarDot.className = 'pulse-offline';
-                        topbarText.textContent = 'Offline / Terputus';
-                        topbarText.className = 'text-danger';
-                    }
-                }
+            function sendAdminHeartbeat() {
+                if (!navigator.onLine) return;
+                const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
+                fetch("{{ route('api.admin_heartbeat') }}", {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': csrfToken,
+                        'Accept': 'application/json'
+                    },
+                    cache: 'no-store'
+                }).catch(() => {});
             }
 
-            async function checkAdminServerStatus() {
-                if (!navigator.onLine) {
-                    setAdminServerStatus(false);
-                    return;
+            sendAdminHeartbeat();
+            setInterval(sendAdminHeartbeat, 10000);
+            document.addEventListener('visibilitychange', function () {
+                if (document.visibilityState === 'visible') {
+                    sendAdminHeartbeat();
                 }
-                const controller = new AbortController();
-                const timer = setTimeout(() => controller.abort(), 3000);
-                try {
-                    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
-                    const res = await fetch("{{ route('api.admin_heartbeat') }}", {
-                        method: 'POST',
-                        headers: {
-                            'X-CSRF-TOKEN': csrfToken,
-                            'Accept': 'application/json'
-                        },
-                        cache: 'no-store',
-                        signal: controller.signal
-                    });
-                    clearTimeout(timer);
-                    setAdminServerStatus(res.ok);
-                } catch (e) {
-                    clearTimeout(timer);
-                    setAdminServerStatus(false);
-                }
-            }
-
-            checkAdminServerStatus();
-            setInterval(checkAdminServerStatus, 4000);
-            window.addEventListener('online', checkAdminServerStatus);
-            window.addEventListener('offline', () => setAdminServerStatus(false));
+            });
         });
     </script>
     @stack('scripts')

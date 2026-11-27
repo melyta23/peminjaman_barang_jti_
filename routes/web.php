@@ -18,7 +18,7 @@ Route::get('/api/kategori/{id}/items', [ItemController::class, 'getByCategory'])
 // API Cek Status Admin Online / Offline (Realtime berbasis Database)
 Route::get('/api/server-status', function () {
     $isAdminOnline = \App\Models\User::where('role', 'admin')
-        ->where('updated_at', '>=', now()->subSeconds(15))
+        ->where('updated_at', '>=', now()->subSeconds(60))
         ->exists();
 
     return response()->json([
