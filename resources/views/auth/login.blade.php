@@ -10,6 +10,7 @@
         align-items: center;
         justify-content: center;
         position: relative;
+        overflow: hidden;
     }
 
     /* Ambient background soft glow */
@@ -20,6 +21,7 @@
         left: 50%;
         transform: translate(-50%, -50%);
         width: 600px;
+        max-width: 100%;
         height: 400px;
         background: radial-gradient(circle, rgba(37, 99, 235, 0.08) 0%, rgba(14, 165, 233, 0.03) 50%, transparent 75%);
         pointer-events: none;
@@ -209,8 +211,9 @@
 
                 <!-- Main Card -->
                 @php
-                    $lastActive = \Illuminate\Support\Facades\Cache::get('admin_last_active');
-                    $isAdminOnline = $lastActive && (now()->timestamp - (int) $lastActive) <= 10;
+                    $isAdminOnline = \App\Models\User::where('role', 'admin')
+                        ->where('updated_at', '>=', now()->subSeconds(15))
+                        ->exists();
                 @endphp
                 <div class="card login-card rounded-4 overflow-hidden">
                     <!-- Status Admin Online / Offline Realtime -->

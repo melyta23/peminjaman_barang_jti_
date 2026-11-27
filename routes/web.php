@@ -15,10 +15,11 @@ Route::get('/katalog', [ItemController::class, 'index'])->name('katalog');
 // API Dependent Dropdown Barang per Kategori
 Route::get('/api/kategori/{id}/items', [ItemController::class, 'getByCategory'])->name('api.items.by_category');
 
-// API Cek Status Admin Online / Offline (Realtime)
+// API Cek Status Admin Online / Offline (Realtime berbasis Database)
 Route::get('/api/server-status', function () {
-    $lastActive = \Illuminate\Support\Facades\Cache::get('admin_last_active');
-    $isAdminOnline = $lastActive && (now()->timestamp - (int) $lastActive) <= 10;
+    $isAdminOnline = \App\Models\User::where('role', 'admin')
+        ->where('updated_at', '>=', now()->subSeconds(15))
+        ->exists();
 
     return response()->json([
         'status' => $isAdminOnline ? 'online' : 'offline',
@@ -27,7 +28,10 @@ Route::get('/api/server-status', function () {
 })->name('api.server_status');
 
 Route::middleware(['auth', 'admin'])->post('/api/admin-heartbeat', function () {
-    \Illuminate\Support\Facades\Cache::put('admin_last_active', now()->timestamp, 12);
+    $user = \Illuminate\Support\Facades\Auth::user();
+    if ($user) {
+        $user->forceFill(['updated_at' => now()])->saveQuietly();
+    }
     return response()->json(['status' => 'online']);
 })->name('api.admin_heartbeat');
 

@@ -28,6 +28,7 @@ class AuthController extends Controller
             $request->session()->regenerate();
 
             if (Auth::user()->isAdmin()) {
+                Auth::user()->forceFill(['updated_at' => now()])->saveQuietly();
                 return redirect()->intended(route('admin.dashboard'))->with('success', 'Selamat datang kembali, Petugas Lab!');
             }
 
@@ -43,7 +44,9 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
-        \Illuminate\Support\Facades\Cache::forget('admin_last_active');
+        if (Auth::check() && Auth::user()->isAdmin()) {
+            Auth::user()->forceFill(['updated_at' => now()->subMinutes(5)])->saveQuietly();
+        }
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
